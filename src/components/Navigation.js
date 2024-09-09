@@ -57,10 +57,10 @@ function Navigation() {
       </a>
     </li>
   );
-/*   const cartItemsCount = useCartItemsCount(); */
+  /*   const cartItemsCount = useCartItemsCount(); */
 
   return (
-    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24">
+    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24 fixed">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Leaf className="text-amber-200 w-8 h-8" />
