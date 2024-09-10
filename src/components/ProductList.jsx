@@ -313,12 +313,12 @@ import { useDispatch } from "react-redux";
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 p-5 place-items-center">
             {category.plants.map((plant, plantIndex) => (
-              {/* <PlantCard
+               <PlantCard
                 key={plantIndex}
                 plant={plant}
-                onAddToCart={handleAddToCart}
+                /* onAddToCart={handleAddToCart} */
                 isAdded={plant.isAdded}
-              /> */}
+              />
             ))}
           </div>
         </div>
@@ -336,8 +336,8 @@ import { useDispatch } from "react-redux";
           </button>
         </div>
 
-        {/* {showCart ? (
-          <CartItem onContinueShopping={handleContinueShopping} />
+         {showCart ? (
+          {/* <CartItem onContinueShopping={handleContinueShopping} /> */}
         ) : (
           <div className="flex flex-col items-center justify-center">
             {plantCategories.length > 0 ? (
@@ -348,7 +348,7 @@ import { useDispatch } from "react-redux";
               </div>
             )}
           </div>
-        )} */}
+        )}
       </div>
     );
   }
