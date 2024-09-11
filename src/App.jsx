@@ -10,19 +10,37 @@ import LandingPage from "./components/landpage";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import ProductList from "./components/ProductList";
+import SignIn from "./components/Signin";
+import SignUp from "./components/Signup";
+import PrivateRoute from "./components/PrivateRoute";
+import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
+
 function App() {
   return (
     <Provider store={store}>
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="products" element={<ProductList />} />
-      </Routes>
-      <Footer />
-    </Router>
+      <Router>
+        <AuthProvider>
+          {" "}
+          {/* Wrap your routes with AuthProvider */}
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="about" element={<About />} />
+            <Route
+              path="contact"
+              element={
+                <PrivateRoute>
+                  <Contact />
+                </PrivateRoute>
+              }
+            />
+            <Route path="products" element={<ProductList />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="signin" element={<SignIn />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
+      </Router>
     </Provider>
   );
 }
