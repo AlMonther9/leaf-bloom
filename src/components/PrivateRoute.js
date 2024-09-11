@@ -1,14 +1,23 @@
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
 
-const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
-  if (!user) {
-    return <Navigate to="/signup" />;
+const PrivateRoute = () => {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    // Show a loading spinner or something similar
+    return <div>Loading...</div>;
   }
 
-  return children;
+  if (!user) {
+    console.log("PrivateRoute: Redirecting to signup");
+    return <Navigate to="/signup" replace />;
+  }
+
+  console.log("PrivateRoute: Rendering protected route");
+  return <Outlet />;
 };
+
 
 export default PrivateRoute;

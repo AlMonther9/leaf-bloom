@@ -26,15 +26,10 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="about" element={<About />} />
-            <Route
-              path="contact"
-              element={
-                <PrivateRoute>
-                  <Contact />
-                </PrivateRoute>
-              }
-            />
+            <Route element={<PrivateRoute />}>
+            <Route path="contact" element={<Contact />} />
             <Route path="products" element={<ProductList />} />
+            </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />
           </Routes>

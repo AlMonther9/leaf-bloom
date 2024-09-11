@@ -13,7 +13,7 @@ const Tooltip = ({ children, content }) => {
   return (
     <div className="relative group">
       {children}
-      <div className="absolute z-10 invisible group-hover:visible bg-amber-50 text-green-800 text-sm w-32 rounded-lg py-1 px-3 left-1/2 transform -translate-x-1/2 mb-1 shadow-lg border border-green-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute z-10 invisible group-hover:visible bg-amber-50 text-green-800 text-sm w-32 rounded-lg py-1 px-3 left-1/2= transform -translate-x-1/2 mb-1 shadow-lg border border-green-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         {content}
         <svg
           className="absolute text-amber-50 h-2 w-full left-0 top-full"
@@ -44,7 +44,7 @@ function Navigation() {
     []
   );
   const homenavigate = () => {
-    navigate("/home");
+    navigate("/");
   };
   const renderMenuItem = (item) => (
     <li key={item} className="flex items-center">
@@ -88,7 +88,6 @@ function Navigation() {
         >
           {MENU_ITEMS.map(renderMenuItem)}
           <li className="relative">
-            <Tooltip content="Explore our botanical treasures">
               <button
                 className="flex items-center no-underline hover:text-amber-200 transition-colors duration-300 group"
                 onClick={toggleDropdown}
@@ -96,7 +95,6 @@ function Navigation() {
                 Plants{" "}
                 <ChevronDown className="w-4 h-4 ml-2 group-hover:rotate-180 transition-transform duration-300" />
               </button>
-            </Tooltip>
             {isDropdownOpen && (
               <ul className="absolute top-8 right-0 mt-2 w-48 bg-amber-50 rounded-md shadow-lg py-2 z-10">
                 {PLANT_SUBMENU.map(({ name, path }) => (
@@ -113,7 +111,7 @@ function Navigation() {
             )}
           </li>
           <div className="relative flex items-center">
-            <Tooltip content="Tend to your account">
+            <Tooltip content="Account">
               <User
                 className="w-6 h-6 cursor-pointer text-amber-100 hover:text-amber-200 transition-colors duration-300"
                 onClick={toggleUserDropdown}
@@ -136,7 +134,7 @@ function Navigation() {
             )}
           </div>
           <div className="relative">
-            <Tooltip content="Your botanical basket">
+            <Tooltip content="Cart">
               <button
                 onClick={() => navigate("/cart")}
                 aria-label="View Cart"
