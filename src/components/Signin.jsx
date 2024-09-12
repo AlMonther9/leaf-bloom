@@ -46,7 +46,7 @@ const SignIn = () => {
         navigate("/");
       }
     } catch (error) {
-      setError("Sign in failed: " + error.message);
+      handleError(error);
     }
   };
 
@@ -68,7 +68,39 @@ const SignIn = () => {
       setError("Failed to resend verification email: " + error.message);
     }
   };
+  const handleError = (error) => {
+    let errorMessage = "";
 
+    switch (error.code) {
+      case "auth/wrong-password":
+        errorMessage = "Incorrect password. Please try again.";
+        break;
+      case "auth/user-not-found":
+        errorMessage = "No user found with this email. Please sign up.";
+        break;
+      case "auth/user-disabled":
+        errorMessage =
+          "This user account has been disabled. Please contact support.";
+        break;
+      case "auth/email-already-in-use":
+        errorMessage =
+          "An account with this email already exists. Please sign in.";
+        break;
+      case "auth/invalid-email":
+        errorMessage = "Invalid email format. Please enter a valid email.";
+        break;
+      case "auth/user-not-verified":
+        errorMessage = "Please verify your email before signing in.";
+        break;
+      case "auth/invalid-login-credentials":
+        errorMessage = "This email does not exist, SignUp first.";
+        break;
+      default:
+        errorMessage = "An error occurred: " + error.message;
+    }
+
+    setError(errorMessage);
+  };
   return (
     <div className="flex justify-center items-center h-screen bg-sign bg-cover">
       <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded shadow-md w-full max-w-md">

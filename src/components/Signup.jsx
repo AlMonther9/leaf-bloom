@@ -92,7 +92,7 @@ const SignUp = () => {
         setIsSigningUp(false);
         return;
       }
-
+      await checkVerification();
       setIsSigningUp(false);
     } catch (error) {
       setError("Signup failed: " + error.message);
@@ -170,7 +170,7 @@ const SignUp = () => {
               Already have an account?
               <button
                 type="button"
-                onClick={() => navigate("/signUp")}
+                onClick={() => navigate("/signin")}
                 className=" text-white rounded hover:text-green-700"
               >
                 Sign In
