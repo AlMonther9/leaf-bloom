@@ -9,7 +9,7 @@ import {
   doc,
   getDoc,
   setDoc,
-  deleteDoc, // Make sure deleteDoc is imported
+  deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../firebaseConfig";
@@ -22,6 +22,8 @@ const Community = () => {
   const [error, setError] = useState("");
   const [likedPosts, setLikedPosts] = useState({});
   const [likeErrors, setLikeErrors] = useState({});
+  const [isEditing, setIsEditing] = useState(false); // Track editing state
+  const [editPostData, setEditPostData] = useState({}); // Data for the post being edited
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -59,7 +61,6 @@ const Community = () => {
         }
       } catch (error) {
         console.error("Error fetching liked posts:", error);
-        // setError("Failed to load liked posts. Please try again later.");
       }
     };
 
@@ -82,7 +83,7 @@ const Community = () => {
       return;
     }
 
-    if (!newPost.image) {
+    if (!newPost.image && !isEditing) {
       setError("Please provide an image for your post.");
       return;
     }
@@ -105,7 +106,16 @@ const Community = () => {
         post.imageUrl = await getDownloadURL(imageRef);
       }
 
-      await addDoc(collection(db, "posts"), post);
+      if (isEditing) {
+        // Update the post if editing
+        const postRef = doc(db, "posts", editPostData.id);
+        await updateDoc(postRef, { ...editPostData, ...post });
+        setIsEditing(false); // Reset edit state after updating
+      } else {
+        // Add a new post if not editing
+        await addDoc(collection(db, "posts"), post);
+      }
+
       setNewPost({ title: "", description: "" });
       setImage(null);
     } catch (error) {
@@ -156,6 +166,12 @@ const Community = () => {
     }
   };
 
+  const editPost = (post) => {
+    setIsEditing(true); // Set edit mode
+    setEditPostData(post); // Load the post data into the form
+    setNewPost({ title: post.title, description: post.description }); // Prefill form with post data
+  };
+
   if (!auth.currentUser) {
     return (
       <div className="container mx-auto px-4 md:px-12 lg:px-24 mt-4">
@@ -171,7 +187,7 @@ const Community = () => {
     );
   }
 
-  const user = auth.currentUser; // Define user object here
+  const user = auth.currentUser;
 
   return (
     <div className="container flex flex-col md:flex-row mx-auto px-4 md:px-12 lg:px-24 mt-4 gap-4">
@@ -212,7 +228,7 @@ const Community = () => {
             type="submit"
             className="bg-tertiary  text-white py-2 px-4 rounded-lg hover:bg-quaternary hover:scale-100"
           >
-            Post
+            {isEditing ? "Update Post" : "Post"}
           </button>
         </form>
       </div>
@@ -231,34 +247,35 @@ const Community = () => {
             )}
             <h2 className="text-xl font-bold">{post.title}</h2>
             <p className="px-2">{post.description}</p>
-            <div className="flex items-center mt-2">
-              {user.uid !== post.userId && (
+            <div className="flex justify-between px-4 my-2">
+              {user.uid === post.userId && (
                 <button
-                  onClick={() => handleLike(post.id)}
-                  className="flex items-center space-x-1 m-2"
-                  disabled={likedPosts[post.id]}
+                  className="text-gray-500 hover:text-tertiary"
+                  onClick={() => editPost(post)}
                 >
-                  <Heart
-                    size={20}
-                    fill={likedPosts[post.id] ? "green" : "none"}
-                    color={likedPosts[post.id] ? "green" : "currentColor"}
-                  />
-                  <span>{post.likes}</span>
+                  Edit
                 </button>
-              )}
-              {likeErrors[post.id] && (
-                <span className="text-red-600 ml-2 text-sm">
-                  {likeErrors[post.id]}
-                </span>
               )}
               {user.uid === post.userId && (
                 <button
+                  className="text-red-500 hover:text-red-700"
                   onClick={() => deletePost(post.id)}
-                  className="ml-auto bg-red-500 text-white p-2 m-2 rounded"
                 >
                   Delete
                 </button>
               )}
+            </div>
+            <div className="flex justify-between px-2 items-center mt-2 mb-4">
+              {user.uid !== post.userId && (
+                <button
+                  className="flex items-center text-tertiary "
+                  onClick={() => handleLike(post.id)}
+                >
+                  <Heart className="mr-1" />
+                  <span>{post.likes || 0}</span>
+                </button>
+              )}
+              <p>{likeErrors[post.id]}</p>
             </div>
           </div>
         ))}
