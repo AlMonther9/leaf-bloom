@@ -60,7 +60,7 @@ function Navigation() {
   /*   const cartItemsCount = useCartItemsCount(); */
 
   return (
-    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24 fixed">
+    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Leaf className="text-amber-200 w-8 h-8" />
@@ -88,13 +88,13 @@ function Navigation() {
         >
           {MENU_ITEMS.map(renderMenuItem)}
           <li className="relative">
-              <button
-                className="flex items-center no-underline hover:text-amber-200 transition-colors duration-300 group"
-                onClick={toggleDropdown}
-              >
-                Plants{" "}
-                <ChevronDown className="w-4 h-4 ml-2 group-hover:rotate-180 transition-transform duration-300" />
-              </button>
+            <button
+              className="flex items-center no-underline hover:text-amber-200 transition-colors duration-300 group"
+              onClick={toggleDropdown}
+            >
+              Plants{" "}
+              <ChevronDown className="w-4 h-4 ml-2 group-hover:rotate-180 transition-transform duration-300" />
+            </button>
             {isDropdownOpen && (
               <ul className="absolute top-8 right-0 mt-2 w-48 bg-amber-50 rounded-md shadow-lg py-2 z-10">
                 {PLANT_SUBMENU.map(({ name, path }) => (
