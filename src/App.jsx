@@ -10,34 +10,20 @@ import LandingPage from "./components/landpage";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import ProductList from "./components/ProductList";
-import SignIn from "./components/Signin";
-import SignUp from "./components/Signup";
-import PrivateRoute from "./components/PrivateRoute";
-import PlantEncyclopedia from "./components/PlantEncyclopedia";
-import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
-import Community from "./components/Community";
+import Cart from "./components/Cart";
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <AuthProvider>
-          {" "}
-          {/* Wrap your routes with AuthProvider */}
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="about" element={<About />} />
-            <Route path="plant-encyclopedia" element={<PlantEncyclopedia />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="contact" element={<Contact />} />
-              <Route path="products" element={<ProductList />} />
-              <Route path="community" element={<Community />} />
-            </Route>
-            <Route path="signup" element={<SignUp />} />
-            <Route path="signin" element={<SignIn />} />
-          </Routes>
-          <Footer />
-        </AuthProvider>
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="products" element={<ProductList />} />
+          <Route path="cart" element={<Cart />} />
+        </Routes>
+        <Footer />
       </Router>
     </Provider>
   );
