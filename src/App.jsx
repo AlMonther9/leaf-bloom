@@ -13,6 +13,7 @@ import ProductList from "./components/ProductList";
 import SignIn from "./components/Signin";
 import SignUp from "./components/Signup";
 import PrivateRoute from "./components/PrivateRoute";
+import PlantEncyclopedia from "./components/PlantEncyclopedia";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="about" element={<About />} />
+            <Route path="plant-encyclopedia" element={<PlantEncyclopedia />} />
             <Route element={<PrivateRoute />}>
             <Route path="contact" element={<Contact />} />
             <Route path="products" element={<ProductList />} />
