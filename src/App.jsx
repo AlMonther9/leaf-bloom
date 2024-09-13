@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import "./App.css";
-// Compnents
+// Components
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import LandingPage from "./components/landpage";
@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import ProductList from "./components/ProductList";
 import SignIn from "./components/Signin";
 import SignUp from "./components/Signup";
+import Profile from "./components/profile";
 import PrivateRoute from "./components/PrivateRoute";
 import PlantEncyclopedia from "./components/PlantEncyclopedia";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
@@ -34,6 +35,7 @@ function App() {
               <Route path="products" element={<ProductList />} />
               <Route path="community" element={<Community />} />
               <Route path="cart" element={<Cart />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />
