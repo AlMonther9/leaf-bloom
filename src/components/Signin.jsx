@@ -5,12 +5,15 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-
+import Button from "./UI/Button";
+import ErrorHandler from "./ErrorHandling";
+import ResendVerificationEmail from "./VerificationEmail";
+import Input from "./UI/Input";
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [verificationSent, setVerificationSent] = useState(false);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ const SignIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setError(null);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -38,69 +41,20 @@ const SignIn = () => {
       if (!user.emailVerified) {
         await sendEmailVerification(user);
         setVerificationSent(true);
-        setError(
-          "Please verify your email before signing in. A new verification email has been sent."
-        );
+        setError({
+          code: "auth/user-not-verified",
+          message:
+            "Please verify your email before signing in. A new verification email has been sent.",
+        });
         await auth.signOut();
       } else {
         navigate("/");
       }
     } catch (error) {
-      handleError(error);
+      setError(error);
     }
   };
 
-  const resendVerificationEmail = async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        await sendEmailVerification(user);
-        setVerificationSent(true);
-        setError(
-          "A new verification email has been sent. Please check your inbox."
-        );
-      } else {
-        setError(
-          "No user is currently signed in. Please try signing in again."
-        );
-      }
-    } catch (error) {
-      setError("Failed to resend verification email: " + error.message);
-    }
-  };
-  const handleError = (error) => {
-    let errorMessage = "";
-
-    switch (error.code) {
-      case "auth/wrong-password":
-        errorMessage = "Incorrect password. Please try again.";
-        break;
-      case "auth/user-not-found":
-        errorMessage = "No user found with this email. Please sign up.";
-        break;
-      case "auth/user-disabled":
-        errorMessage =
-          "This user account has been disabled. Please contact support.";
-        break;
-      case "auth/email-already-in-use":
-        errorMessage =
-          "An account with this email already exists. Please sign in.";
-        break;
-      case "auth/invalid-email":
-        errorMessage = "Invalid email format. Please enter a valid email.";
-        break;
-      case "auth/user-not-verified":
-        errorMessage = "Please verify your email before signing in.";
-        break;
-      case "auth/invalid-login-credentials":
-        errorMessage = "This email does not exist, SignUp first.";
-        break;
-      default:
-        errorMessage = "An error occurred: " + error.message;
-    }
-
-    setError(errorMessage);
-  };
   return (
     <div className="flex justify-center items-center h-screen bg-sign bg-cover">
       <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded shadow-md w-full max-w-md">
@@ -108,38 +62,34 @@ const SignIn = () => {
           Sign In
         </h1>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
+          <Input
             placeholder="Email"
-            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-green-600 focus:border-2"
           />
-          <input
+          <Input
             type="password"
             placeholder="Password"
-            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-2 focus:border-green-600"
           />
-          {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
+          <ErrorHandler error={error} />
           {verificationSent && (
-            <button
-              type="button"
-              onClick={resendVerificationEmail}
+            <Button
+              text="Resend Verification Email"
+              onClick={<ResendVerificationEmail />}
               className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 mb-4"
-            >
-              Resend Verification Email
-            </button>
+            ></Button>
           )}
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-          >
-            Sign In
-          </button>
+          <p className="mt-2 text-center">
+            <button
+              onClick={() => navigate("/forgot-password")}
+              className="text-blue-600 hover:underline mb-1 py-0"
+            >
+              Forgot Password?
+            </button>
+          </p>
+          <Button text="Sign In" type="submit"></Button>
           <p className="flex text-white gap-2 mt-2 justify-center">
             {" "}
             Don't have an account?
