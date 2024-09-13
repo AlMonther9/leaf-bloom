@@ -17,6 +17,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import PlantEncyclopedia from "./components/PlantEncyclopedia";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
 import Community from "./components/Community";
+import Cart from "./components/Cart";
 function App() {
   return (
     <Provider store={store}>
@@ -33,7 +34,6 @@ function App() {
               <Route path="contact" element={<Contact />} />
               <Route path="products" element={<ProductList />} />
               <Route path="community" element={<Community />} />
-            <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />

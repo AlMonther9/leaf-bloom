@@ -1,7 +1,6 @@
 import { useState, useCallback, useContext } from "react";
 import { Menu, X, ChevronDown, User, ShoppingBag, Leaf, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthProvider";
 /* import { useCartItemsCount } from "../redux/CartItem"; */
 const MENU_ITEMS = ["Home", "About", "Contact", "Blog", "Community"];
 const PLANT_SUBMENU = [
@@ -62,7 +61,7 @@ function Navigation() {
       </a>
     </li>
   );
-  /*   const cartItemsCount = useCartItemsCount(); */
+  const cartItemsCount = useCartItemsCount();
 
   return (
     <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24">
@@ -166,11 +165,11 @@ function Navigation() {
                 className="text-amber-100 hover:text-amber-200 transition-colors duration-300"
               >
                 <ShoppingBag className="w-6 h-6" />
-                {/* {cartItemsCount > 0 && (
+                {cartItemsCount && (
                   <span className="absolute top-4 -right-2 inline-flex items-center justify-center py-1 px-1 text-xs leading-none text-red-100 bg-red-400 hover:bg-red-600 hover:scale-105 rounded-full">
                     {cartItemsCount}
                   </span>
-                )} */}
+                )}
               </button>
             </Tooltip>
           </div>
