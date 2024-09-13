@@ -3,7 +3,7 @@ import { Leaf, Instagram, Facebook, Twitter } from "lucide-react";
 
 function Footer() {
   return (
-    <footer className="bg-quinary text-amber-100 mt-auto px-4 md:px-12 lg:px-24">
+    <footer className="bg-quinary text-amber-100 px-4 md:px-12 lg:px-24">
       <div className=" mx-auto py-6 sm:py-8">
         <div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0">
           <div className="flex items-center space-x-3">

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Search } from "lucide-react";
 
-const SearchBar = ({ onSearch }) => {
-  const [query, setQuery] = useState('');
+const SearchBar = ({ onSearch = () => {} }) => {
+  const [query, setQuery] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -9,21 +10,17 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <div className="flex">
+    <form onSubmit={handleSubmit} className="">
+      <div className="relative w-full">
         <input
-          type="text"
           value={query}
+          className="w-full p-2 pr-10 border border-tertiary rounded-lg  outline-none focus:border-quaternary focus:border-2"
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search plants..."
-          className="flex-grow px-4 py-2 rounded-l-md border-2 border-[#588157] focus:outline-none focus:border-[#3A5A40]"
         />
-        <button
-          type="submit"
-          className="bg-[#588157] text-white px-4 py-2 rounded-r-md hover:bg-[#3A5A40] transition duration-300"
-        >
-          Search
-        </button>
+        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+          <Search size={20} className="text-tertiary" />
+        </div>
       </div>
     </form>
   );

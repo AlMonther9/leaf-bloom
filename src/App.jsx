@@ -18,6 +18,7 @@ import PlantEncyclopedia from "./components/PlantEncyclopedia";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
 import Community from "./components/Community";
 import Cart from "./components/Cart";
+import ForgetPassword from "./components/ForgetPassword";
 function App() {
   return (
     <Provider store={store}>
@@ -38,6 +39,8 @@ function App() {
               <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgetPassword />} />
+
             <Route path="signin" element={<SignIn />} />
           </Routes>
           <Footer />
