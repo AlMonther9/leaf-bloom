@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
-import { Menu, X, ChevronDown, User, ShoppingBag, Leaf } from "lucide-react";
+import { useState, useCallback, useContext } from "react";
+import { Menu, X, ChevronDown, User, ShoppingBag, Leaf, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-/* import { useCartItemsCount } from "../redux/CartItem"; */
+import { AuthContext } from "../context/AuthProvider";
+import { useCartItemsCount } from "../redux/CartItem";
 const MENU_ITEMS = ["Home", "About", "Contact", "Blog", "Community"];
 const PLANT_SUBMENU = [
   { name: "Plant Encyclopedia", path: "/plant-encyclopedia" },
@@ -33,16 +34,20 @@ function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logOut } = useContext(AuthContext);
 
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
-  const toggleDropdown = useCallback(
-    () => setIsDropdownOpen((prev) => !prev),
-    []
-  );
-  const toggleUserDropdown = useCallback(
-    () => setIsUserDropdownOpen((prev) => !prev),
-    []
-  );
+  const toggleDropdown = useCallback(() => setIsDropdownOpen((prev) => !prev), []);
+  const toggleUserDropdown = useCallback(() => setIsUserDropdownOpen((prev) => !prev), []);
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   const homenavigate = () => {
     navigate("/");
   };
@@ -57,7 +62,7 @@ function Navigation() {
       </a>
     </li>
   );
-  /*   const cartItemsCount = useCartItemsCount(); */
+  const cartItemsCount = useCartItemsCount();
 
   return (
     <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24">
@@ -111,28 +116,48 @@ function Navigation() {
             )}
           </li>
           <div className="relative flex items-center">
-            <Tooltip content="Account">
-              <User
-                className="w-6 h-6 cursor-pointer text-amber-100 hover:text-amber-200 transition-colors duration-300"
-                onClick={toggleUserDropdown}
-              />
-            </Tooltip>
-            {isUserDropdownOpen && (
-              <div className="absolute top-8 right-0 mt-2 w-36 bg-amber-50 rounded-md shadow-lg py-2 z-10">
-                {["Sign In", "Sign Up"].map((action) => (
-                  <button
-                    key={action}
-                    onClick={() =>
-                      navigate(`/${action.toLowerCase().replace(" ", "")}`)
-                    }
-                    className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
-                  >
-                    {action}
-                  </button>
-                ))}
-              </div>
+        <Tooltip content="Account">
+          <User
+            className="w-6 h-6 cursor-pointer text-amber-100 hover:text-amber-200 transition-colors duration-300"
+            onClick={toggleUserDropdown}
+          />
+        </Tooltip>
+        {isUserDropdownOpen && (
+          <div className="absolute top-8 right-0 mt-2 w-36 bg-amber-50 rounded-md shadow-lg py-2 z-10">
+            {user ? (
+              <>
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/signin")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Sign Up
+                </button>
+              </>
             )}
           </div>
+        )}
+      </div>
           <div className="relative">
             <Tooltip content="Cart">
               <button
@@ -141,11 +166,11 @@ function Navigation() {
                 className="text-amber-100 hover:text-amber-200 transition-colors duration-300"
               >
                 <ShoppingBag className="w-6 h-6" />
-                {/* {cartItemsCount > 0 && (
+                {cartItemsCount && (
                   <span className="absolute top-4 -right-2 inline-flex items-center justify-center py-1 px-1 text-xs leading-none text-red-100 bg-red-400 hover:bg-red-600 hover:scale-105 rounded-full">
                     {cartItemsCount}
                   </span>
-                )} */}
+                )}
               </button>
             </Tooltip>
           </div>
