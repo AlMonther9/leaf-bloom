@@ -1,7 +1,8 @@
 import { useState, useCallback, useContext } from "react";
 import { Menu, X, ChevronDown, User, ShoppingBag, Leaf, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-/* import { useCartItemsCount } from "../redux/CartItem"; */
+import { AuthContext } from "../context/AuthProvider";
+import { useCartItemsCount } from "../redux/CartItem";
 const MENU_ITEMS = ["Home", "About", "Contact", "Blog", "Community"];
 const PLANT_SUBMENU = [
   { name: "Plant Encyclopedia", path: "/plant-encyclopedia" },

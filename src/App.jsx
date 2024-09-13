@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import "./App.css";
-// Compnents
+// Components
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import LandingPage from "./components/landpage";
@@ -34,6 +34,8 @@ function App() {
               <Route path="contact" element={<Contact />} />
               <Route path="products" element={<ProductList />} />
               <Route path="community" element={<Community />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />
