@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import ProductList from "./components/ProductList";
 import SignIn from "./components/Signin";
 import SignUp from "./components/Signup";
+import Profile from "./components/profile";
 import PrivateRoute from "./components/PrivateRoute";
 import PlantEncyclopedia from "./components/PlantEncyclopedia";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
@@ -32,6 +33,7 @@ function App() {
               <Route path="contact" element={<Contact />} />
               <Route path="products" element={<ProductList />} />
               <Route path="community" element={<Community />} />
+            <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   collection,
   query,
@@ -22,8 +22,9 @@ const Community = () => {
   const [error, setError] = useState("");
   const [likedPosts, setLikedPosts] = useState({});
   const [likeErrors, setLikeErrors] = useState({});
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-  const [editPostData, setEditPostData] = useState({}); // Data for the post being edited
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPostData, setEditPostData] = useState({});
+  const [comments, setComments] = useState({}); // Track comments for each post
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -32,23 +33,21 @@ const Community = () => {
       return;
     }
 
-    const fetchPosts = () => {
-      const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-      return onSnapshot(
-        q,
-        (querySnapshot) => {
-          const postsArray = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setPosts(postsArray);
-        },
-        (error) => {
-          console.error("Error fetching posts:", error);
-          setError("Failed to load posts. Please try again later.");
-        }
-      );
-    };
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const postsArray = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setPosts(postsArray);
+      },
+      (error) => {
+        console.error("Error fetching posts:", error);
+        setError("Failed to load posts. Please try again later.");
+      }
+    );
 
     const fetchLikedPosts = async () => {
       try {
@@ -64,96 +63,102 @@ const Community = () => {
       }
     };
 
-    const unsubscribe = fetchPosts();
     fetchLikedPosts();
 
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    return () => unsubscribe();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (!newPost.title) {
-      setError("Please provide a title for your post.");
-      return;
-    }
-
-    if (!newPost.image && !isEditing) {
-      setError("Please provide an image for your post.");
-      return;
-    }
-
-    try {
-      const user = auth.currentUser;
-      if (!user) throw new Error("User is not authenticated");
-
-      const post = {
-        ...newPost,
-        createdAt: new Date(),
-        userId: user.uid,
-        likes: 0,
-        comments: [],
-      };
-
-      if (image) {
-        const imageRef = ref(storage, `posts/${Date.now()}_${image.name}`);
-        await uploadBytes(imageRef, image);
-        post.imageUrl = await getDownloadURL(imageRef);
-      }
-
-      if (isEditing) {
-        // Update the post if editing
-        const postRef = doc(db, "posts", editPostData.id);
-        await updateDoc(postRef, { ...editPostData, ...post });
-        setIsEditing(false); // Reset edit state after updating
-      } else {
-        // Add a new post if not editing
-        await addDoc(collection(db, "posts"), post);
-      }
-
-      setNewPost({ title: "", description: "" });
-      setImage(null);
-    } catch (error) {
-      console.error("Error creating post:", error);
-      setError("Failed to create post. Please try again later.");
-    }
+  const handleImageUpload = async (image) => {
+    const imageRef = ref(storage, `posts/${Date.now()}_${image.name}`);
+    await uploadBytes(imageRef, image);
+    return getDownloadURL(imageRef);
   };
 
-  const handleLike = async (postId) => {
-    if (likedPosts[postId]) {
-      setLikeErrors((prev) => ({
-        ...prev,
-        [postId]: "You've already liked this post.",
-      }));
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setError("");
 
-    try {
-      const user = auth.currentUser;
-      if (!user) throw new Error("User is not authenticated");
+      if (!newPost.title) {
+        setError("Please provide a title for your post.");
+        return;
+      }
 
-      const likedPostsRef = doc(db, "userLikedPosts", user.uid);
-      await updateDoc(likedPostsRef, {
-        [postId]: true,
-      });
+      if (!image && !isEditing) {
+        setError("Please provide an image for your post.");
+        return;
+      }
 
-      setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-      setLikeErrors((prev) => ({ ...prev, [postId]: null }));
-    } catch (error) {
-      console.error("Error liking post:", error);
-      setLikeErrors((prev) => ({
-        ...prev,
-        [postId]: "You've already liked this post.",
-      }));
-    }
-  };
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("User is not authenticated");
 
-  const deletePost = async (postId) => {
+        const post = {
+          ...newPost,
+          createdAt: new Date(),
+          userId: user.uid,
+          likes: 0,
+          comments: [],
+        };
+
+        if (image) {
+          post.imageUrl = await handleImageUpload(image);
+        }
+
+        if (isEditing) {
+          const postRef = doc(db, "posts", editPostData.id);
+          await updateDoc(postRef, { ...editPostData, ...post });
+          setIsEditing(false);
+        } else {
+          await addDoc(collection(db, "posts"), post);
+        }
+
+        setNewPost({ title: "", description: "" });
+        setImage(null);
+      } catch (error) {
+        console.error("Error creating post:", error);
+        setError("Failed to create post. Please try again later.");
+      }
+    },
+    [newPost, image, isEditing, editPostData]
+  );
+
+  const handleLike = useCallback(
+    async (postId) => {
+      if (likedPosts[postId]) {
+        setLikeErrors((prev) => ({
+          ...prev,
+          [postId]: "You've already liked this post.",
+        }));
+        return;
+      }
+
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("User is not authenticated");
+
+        const likedPostsRef = doc(db, "userLikedPosts", user.uid);
+        await updateDoc(likedPostsRef, { [postId]: true });
+
+        const postRef = doc(db, "posts", postId);
+        await updateDoc(postRef, {
+          likes: (likedPosts[postId]?.likes || 0) + 1,
+        });
+
+        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+        setLikeErrors((prev) => ({ ...prev, [postId]: null }));
+      } catch (error) {
+        console.error("Error liking post:", error);
+        setLikeErrors((prev) => ({
+          ...prev,
+          [postId]: "Failed to like post. Please try again later.",
+        }));
+      }
+    },
+    [likedPosts]
+  );
+
+  const deletePost = useCallback(async (postId) => {
     try {
       const user = auth.currentUser;
       if (!user) throw new Error("User is not authenticated");
@@ -164,12 +169,63 @@ const Community = () => {
       console.error("Error deleting post:", error);
       setError("Failed to delete post. Please try again later.");
     }
+  }, []);
+
+  const editPost = useCallback((post) => {
+    setIsEditing(true);
+    setEditPostData(post);
+    setNewPost({ title: post.title, description: post.description });
+  }, []);
+
+  const addComment = async (postId, commentText) => {
+    if (!commentText) return;
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User is not authenticated");
+
+      const postRef = doc(db, "posts", postId);
+      const postSnap = await getDoc(postRef);
+      if (postSnap.exists()) {
+        const post = postSnap.data();
+        const updatedComments = [
+          ...post.comments,
+          { userId: user.uid, text: commentText, createdAt: new Date() },
+        ];
+
+        await updateDoc(postRef, { comments: updatedComments });
+        setComments((prev) => ({
+          ...prev,
+          [postId]: updatedComments,
+        }));
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   };
 
-  const editPost = (post) => {
-    setIsEditing(true); // Set edit mode
-    setEditPostData(post); // Load the post data into the form
-    setNewPost({ title: post.title, description: post.description }); // Prefill form with post data
+  const deleteComment = async (postId, commentIndex) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User is not authenticated");
+
+      const postRef = doc(db, "posts", postId);
+      const postSnap = await getDoc(postRef);
+      if (postSnap.exists()) {
+        const post = postSnap.data();
+        const updatedComments = post.comments.filter(
+          (_, index) => index !== commentIndex
+        );
+
+        await updateDoc(postRef, { comments: updatedComments });
+        setComments((prev) => ({
+          ...prev,
+          [postId]: updatedComments,
+        }));
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
   };
 
   if (!auth.currentUser) {
@@ -208,14 +264,19 @@ const Community = () => {
             type="text"
             placeholder="Title"
             value={newPost.title}
-            onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+            onChange={(e) =>
+              setNewPost((prev) => ({ ...prev, title: e.target.value }))
+            }
             className="w-full p-2 mb-2 border rounded outline-none focus:border-quaternary focus:border-2"
           />
           <textarea
             placeholder="Description"
             value={newPost.description}
             onChange={(e) =>
-              setNewPost({ ...newPost, description: e.target.value })
+              setNewPost((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
             }
             className="w-full p-2 mb-2 border rounded-lg resize-none outline-none focus:border-quaternary focus:border-2"
           />
@@ -249,26 +310,26 @@ const Community = () => {
             <p className="px-2">{post.description}</p>
             <div className="flex justify-between px-4 my-2">
               {user.uid === post.userId && (
-                <button
-                  className="text-gray-500 hover:text-tertiary"
-                  onClick={() => editPost(post)}
-                >
-                  Edit
-                </button>
-              )}
-              {user.uid === post.userId && (
-                <button
-                  className="text-red-500 hover:text-red-700"
-                  onClick={() => deletePost(post.id)}
-                >
-                  Delete
-                </button>
+                <>
+                  <button
+                    className="text-gray-500 hover:text-tertiary"
+                    onClick={() => editPost(post)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => deletePost(post.id)}
+                  >
+                    Delete
+                  </button>
+                </>
               )}
             </div>
             <div className="flex justify-between px-2 items-center mt-2 mb-4">
               {user.uid !== post.userId && (
                 <button
-                  className="flex items-center text-tertiary "
+                  className="flex items-center text-tertiary"
                   onClick={() => handleLike(post.id)}
                 >
                   <Heart className="mr-1" />
@@ -276,6 +337,46 @@ const Community = () => {
                 </button>
               )}
               <p>{likeErrors[post.id]}</p>
+            </div>
+
+            {/* Comments Section */}
+            <div className="text-left px-4 pb-4">
+              <h3 className="font-bold mb-2">Comments</h3>
+              {comments[post.id] &&
+                comments[post.id].map((comment, index) => (
+                  <div key={index} className="mb-2">
+                    <p className="text-sm text-gray-700">{comment.text}</p>
+                    {comment.userId === user.uid && (
+                      <button
+                        className="text-red-500 text-xs"
+                        onClick={() => deleteComment(post.id, index)}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                ))}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addComment(post.id, e.target.elements.commentText.value);
+                  e.target.reset();
+                }}
+                className="flex mt-2"
+              >
+                <input
+                  name="commentText"
+                  type="text"
+                  placeholder="Add a comment..."
+                  className="w-full p-2 border rounded-l outline-none"
+                />
+                <button
+                  type="submit"
+                  className="bg-tertiary text-white py-2 px-4 rounded-r"
+                >
+                  Comment
+                </button>
+              </form>
             </div>
           </div>
         ))}
