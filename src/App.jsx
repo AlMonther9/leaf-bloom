@@ -15,6 +15,7 @@ import SignUp from "./components/Signup";
 import Profile from "./components/profile";
 import PrivateRoute from "./components/PrivateRoute";
 import PlantEncyclopedia from "./components/PlantEncyclopedia";
+import Blog from "./components/Blog";
 import AuthProvider from "./context/AuthProvider"; // Import AuthProvider
 import Community from "./components/Community";
 import Cart from "./components/Cart";
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="about" element={<About />} />
             <Route path="plant-encyclopedia" element={<PlantEncyclopedia />} />
+            <Route path="blog" element={<Blog />} />
             <Route element={<PrivateRoute />}>
               <Route path="contact" element={<Contact />} />
               <Route path="products" element={<ProductList />} />

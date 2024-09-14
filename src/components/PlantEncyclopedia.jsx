@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import FilterComponent from "./FilterComponent";
 import PlantList from "./PlantList";
 import { getPlants, searchPlants } from "../api/api";
+import Loading from "./UI/Loader";
 
 const PlantEncyclopedia = () => {
   const [plants, setPlants] = useState([]);
@@ -52,7 +53,7 @@ const PlantEncyclopedia = () => {
       <div className="flex flex-col gap-6 pb-8">
         <div className="w-full">
           {loading ? (
-            <p className="text-center mt-4 text-[#3A5A40]">Loading...</p>
+            <Loading />
           ) : searchResults ? (
             <div>
               <h3 className="text-xl font-semibold text-[#3A5A40] mt-6 mb-4">
