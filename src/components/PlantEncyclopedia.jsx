@@ -48,13 +48,9 @@ const PlantEncyclopedia = () => {
   };
 
   return (
-    <div className="p-10 pt-[7rem]">
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="w-full md:w-1/3">
-          <SearchBar onSearch={handleSearch} />
-          <FilterComponent onApplyFilters={handleApplyFilters} />
-        </div>
-        <div className="w-full md:w-2/3">
+    <div className="px-8 md:px-12 lg:px-24 pt-6 bg-sunflower bg-cover">
+      <div className="flex flex-col gap-6 pb-8">
+        <div className="w-full">
           {loading ? (
             <p className="text-center mt-4 text-[#3A5A40]">Loading...</p>
           ) : searchResults ? (
@@ -72,9 +68,15 @@ const PlantEncyclopedia = () => {
             </div>
           ) : (
             <div>
-              <h3 className="text-xl font-semibold text-[#3A5A40] mt-6 mb-4">
-                Featured Plants
-              </h3>
+              <div className="flex flex-col md:flex-row gap-3  justify-evenly items-center mb-4 md:mb-8">
+                <h1 className="text-4xl font-semibold text-green-800">
+                  Featured Plants
+                </h1>{" "}
+                <SearchBar onSearch={handleSearch} />{" "}
+              </div>
+              <div className="w-full">
+                <FilterComponent onApplyFilters={handleApplyFilters} />
+              </div>
               <PlantList
                 plants={plants}
                 page={page}
