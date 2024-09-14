@@ -5,6 +5,8 @@ import { getPlants, getCareGuides, getPestDiseaseList, getFAQs } from '../api/ap
 const renderContent = (content) => {
   if (typeof content === 'string') {
     return content;
+  } else if (Array.isArray(content)) {
+    return content.join(', ');
   } else if (typeof content === 'object' && content !== null) {
     return JSON.stringify(content);
   }
@@ -88,10 +90,12 @@ const Blog = () => {
               )}
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-[#344E41] mb-2">{plant.common_name}</h3>
-                <p className="text-sm text-[#3A5A40] mb-1">Scientific Name: {Array.isArray(plant.scientific_name) ? plant.scientific_name.join(', ') : plant.scientific_name}</p>
+                <p className="text-sm text-[#3A5A40] mb-1">
+                  Scientific Name: {renderContent(plant.scientific_name)}
+                </p>
                 <p className="text-sm text-[#3A5A40] mb-1">Cycle: {plant.cycle}</p>
                 <p className="text-sm text-[#3A5A40] mb-1">Watering: {plant.watering}</p>
-                <p className="text-sm text-[#3A5A40]">Sunlight: {Array.isArray(plant.sunlight) ? plant.sunlight.join(', ') : plant.sunlight}</p>
+                <p className="text-sm text-[#3A5A40]">Sunlight: {renderContent(plant.sunlight)}</p>
               </div>
             </div>
           ))}
