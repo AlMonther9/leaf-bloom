@@ -1,162 +1,161 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Search } from 'lucide-react';
-import { getPlants, getCareGuides, getPestDiseaseList, getFAQs } from '../api/api';
-
+import React, { useState, useEffect } from 'react';
+import { getPestDiseaseList, getCareGuides, getFAQs } from '../api/api';
+import { AlertCircle, Leaf } from 'lucide-react';
+import Loading from './UI/Loader';
+// Helper to safely render content
 const renderContent = (content) => {
   if (typeof content === 'string') {
     return content;
   } else if (Array.isArray(content)) {
-    return content.join(', ');
-  } else if (typeof content === 'object' && content !== null) {
-    return JSON.stringify(content);
+    return content.map((item) => renderContent(item)).join(', ');
+  } else if (content && typeof content === 'object') {
+    return content.description || JSON.stringify(content);
   }
   return '';
 };
 
-const Blog = () => {
-  const [plants, setPlants] = useState([]);
+// Helper to render description sections
+const renderDescription = (description) => {
+  if (Array.isArray(description)) {
+    return description.map((item, index) => (
+      <p key={index} className="text-gray-700 mb-2">
+        {item.subtitle && <strong>{item.subtitle}: </strong>}
+        {renderContent(item.description)}
+      </p>
+    ));
+  } else {
+    return <p className="text-gray-700">{renderContent(description)}</p>;
+  }
+};
+
+function Blog() {
+  const [pestData, setPestData] = useState([]);
   const [careGuides, setCareGuides] = useState([]);
-  const [pestDiseases, setPestDiseases] = useState([]);
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [plantsResponse, pestDiseasesResponse, faqsResponse] = await Promise.all([
-        getPlants(page),
-        getPestDiseaseList(),
-        getFAQs()
-      ]);
-
-      setPlants(plantsResponse.data);
-      setTotalPages(plantsResponse.last_page);
-      setPestDiseases(pestDiseasesResponse.data);
-      setFaqs(faqsResponse.data);
-
-      if (plantsResponse.data.length > 0) {
-        const guidesResponse = await getCareGuides(plantsResponse.data[0].id);
-        setCareGuides(guidesResponse.data);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError("Failed to fetch data. Please try again later.");
-      setLoading(false);
-    }
-  }, [page]);
 
   useEffect(() => {
+    async function fetchData() {
+      try {
+        const [pestResponse, careResponse, faqResponse] = await Promise.all([
+          getPestDiseaseList(),
+          getCareGuides(),
+          getFAQs(),
+        ]);
+
+        // Ensure the data is valid and not empty
+        if (pestResponse?.data && careResponse?.data && faqResponse?.data) {
+          setPestData(pestResponse.data.slice(0, 10));
+          setCareGuides(careResponse.data.slice(0, 10));
+          setFaqs(faqResponse.data.slice(0, 10));
+        } else {
+          throw new Error('Invalid response structure');
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data. Please try again later.');
+        setLoading(false);
+      }
+    }
+
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return (
+      <Loading />
+    );
   }
 
   if (error) {
-    return <div className="text-center py-8 text-red-500">{error}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#F3E9D2]">
+        <div
+          className="bg-[#FFD9B7] border border-[#C9ADA7] text-[#6B4F4F] px-4 py-3 rounded-lg shadow-md"
+          role="alert"
+        >
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Plant Care Blog</h1>
-      <div className="mb-6">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search plants..."
-            className="w-full px-4 py-2 border rounded-md pr-10"
-          />
-          <Search className="absolute right-3 top-2.5 text-gray-400" />
-        </div>
-      </div>
+    <div className="bg-[#F3E9D2] min-h-screen p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-5xl font-bold mb-12 text-center text-[#114232] font-serif">
+          The Cozy Plant Corner
+        </h1>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Featured Plants</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {plants.map((plant) => (
-            <div key={plant.id} className="bg-[#A3B18A] rounded-lg shadow-md overflow-hidden">
-              {plant.default_image && (
-                <img
-                  src={plant.default_image.thumbnail}
-                  alt={plant.common_name}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-[#344E41] mb-2">{plant.common_name}</h3>
-                <p className="text-sm text-[#3A5A40] mb-1">
-                  Scientific Name: {renderContent(plant.scientific_name)}
+        {pestData.map((pest, index) => (
+          <article
+            key={pest.id || index} // Ensure a unique key
+            className="mb-16 bg-[#FFE8D6] rounded-lg shadow-lg overflow-hidden border-2 border-[#C9ADA7]"
+          >
+            <div className="p-8">
+              <h2 className="text-3xl font-semibold mb-6 text-[#114232] font-serif flex items-center">
+                <Leaf className="mr-2" /> Plant Care Guide #{index + 1}
+              </h2>
+
+              {/* Pest/Disease Section */}
+              <section className="mb-8">
+                <h3 className="text-2xl font-semibold mb-4 text-[#557153]">
+                  Pest/Disease: {renderContent(pest?.common_name)}
+                </h3>
+                <p className="text-[#6B4F4F] mb-4 italic">
+                  Scientific Name: {renderContent(pest?.scientific_name)}
                 </p>
-                <p className="text-sm text-[#3A5A40] mb-1">Cycle: {plant.cycle}</p>
-                <p className="text-sm text-[#3A5A40] mb-1">Watering: {plant.watering}</p>
-                <p className="text-sm text-[#3A5A40]">Sunlight: {renderContent(plant.sunlight)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+                {pest?.description && (
+                  <div className="mb-4">
+                    <h4 className="text-xl font-semibold mb-2 text-[#557153]">
+                      Description
+                    </h4>
+                    {renderDescription(pest.description)}
+                  </div>
+                )}
+                {pest?.images && pest.images.length > 0 && (
+                  <img
+                    src={pest.images[0].original_url}
+                    alt={renderContent(pest.common_name)}
+                    className="w-full h-64 object-cover rounded-lg shadow-md mb-4"
+                  />
+                )}
+              </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Care Guides</h2>
-        <div className="space-y-4">
-          {careGuides.map((guide) => (
-            <div key={guide.id} className="bg-[#A3B18A] rounded-lg shadow-md p-4">
-              <h3 className="text-lg font-semibold text-[#344E41] mb-2">{guide.section}</h3>
-              <p className="text-sm text-[#3A5A40]">{renderContent(guide.description)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+              {/* Care Guide Section */}
+              {careGuides[index] && (
+                <section className="mb-8">
+                  <h3 className="text-2xl font-semibold mb-4 text-[#557153]">
+                    Care Guide: {renderContent(careGuides[index]?.plant_name)}
+                  </h3>
+                  {careGuides[index]?.section && renderDescription(careGuides[index].section)}
+                </section>
+              )}
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Pests and Diseases</h2>
-        <div className="space-y-4">
-          {pestDiseases.map((item) => (
-            <div key={item.id} className="bg-[#A3B18A] rounded-lg shadow-md p-4">
-              <h3 className="text-lg font-semibold text-[#344E41] mb-2">{item.common_name}</h3>
-              <p className="text-sm text-[#3A5A40]">{renderContent(item.description)}</p>
+              {/* FAQ Section */}
+              {faqs[index] && (
+                <section className="mb-8">
+                  <h3 className="text-2xl font-semibold mb-4 text-[#557153]">
+                    FAQ
+                  </h3>
+                  <h4 className="text-xl font-semibold mb-2 text-[#6B4F4F]">
+                    {renderContent(faqs[index]?.question)}
+                  </h4>
+                  <p className="text-[#6B4F4F]">
+                    {renderContent(faqs[index]?.answer)}
+                  </p>
+                </section>
+              )}
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {faqs.map((faq) => (
-            <div key={faq.id} className="bg-[#A3B18A] rounded-lg shadow-md p-4">
-              <h3 className="text-lg font-semibold text-[#344E41] mb-2">{renderContent(faq.question)}</h3>
-              <p className="text-sm text-[#3A5A40]">{renderContent(faq.answer)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="mt-6 flex justify-center">
-        <button
-          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="bg-[#588157] text-white px-4 py-2 rounded-l-md disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="bg-[#588157] text-white px-4 py-2">Page {page} of {totalPages}</span>
-        <button
-          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="bg-[#588157] text-white px-4 py-2 rounded-r-md disabled:opacity-50"
-        >
-          Next
-        </button>
+          </article>
+        ))}
       </div>
     </div>
   );
-};
+}
 
 export default Blog;
