@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
-import { Menu, X, ChevronDown, User, ShoppingBag, Leaf } from "lucide-react";
+import { useState, useCallback, useContext } from "react";
+import { Menu, X, ChevronDown, User, ShoppingBag, Leaf, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-/* import { useCartItemsCount } from "../redux/CartItem"; */
+import { AuthContext } from "../context/AuthProvider";
+import { useCartItemsCount } from "../redux/CartItem";
 const MENU_ITEMS = ["Home", "About", "Contact", "Blog", "Community"];
 const PLANT_SUBMENU = [
   { name: "Plant Encyclopedia", path: "/plant-encyclopedia" },
@@ -13,7 +14,7 @@ const Tooltip = ({ children, content }) => {
   return (
     <div className="relative group">
       {children}
-      <div className="absolute z-10 invisible group-hover:visible bg-amber-50 text-green-800 text-sm w-32 rounded-lg py-1 px-3 left-1/2 transform -translate-x-1/2 mb-1 shadow-lg border border-green-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute z-10 invisible group-hover:visible bg-amber-50 text-green-800 text-sm w-32 rounded-lg py-1 px-3 left-1/2= transform -translate-x-1/2 mb-1 shadow-lg border border-green-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         {content}
         <svg
           className="absolute text-amber-50 h-2 w-full left-0 top-full"
@@ -33,18 +34,22 @@ function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logOut } = useContext(AuthContext);
 
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
-  const toggleDropdown = useCallback(
-    () => setIsDropdownOpen((prev) => !prev),
-    []
-  );
-  const toggleUserDropdown = useCallback(
-    () => setIsUserDropdownOpen((prev) => !prev),
-    []
-  );
+  const toggleDropdown = useCallback(() => setIsDropdownOpen((prev) => !prev), []);
+  const toggleUserDropdown = useCallback(() => setIsUserDropdownOpen((prev) => !prev), []);
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   const homenavigate = () => {
-    navigate("/home");
+    navigate("/");
   };
   const renderMenuItem = (item) => (
     <li key={item} className="flex items-center">
@@ -57,10 +62,10 @@ function Navigation() {
       </a>
     </li>
   );
-  /*   const cartItemsCount = useCartItemsCount(); */
+  const cartItemsCount = useCartItemsCount();
 
   return (
-    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24 fixed">
+    <nav className="bg-quinary p-6 block w-full z-50 shadow-md px-4 md:px-12 lg:px-24">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Leaf className="text-amber-200 w-8 h-8" />
@@ -88,15 +93,13 @@ function Navigation() {
         >
           {MENU_ITEMS.map(renderMenuItem)}
           <li className="relative">
-            <Tooltip content="Explore our botanical treasures">
-              <button
-                className="flex items-center no-underline hover:text-amber-200 transition-colors duration-300 group"
-                onClick={toggleDropdown}
-              >
-                Plants{" "}
-                <ChevronDown className="w-4 h-4 ml-2 group-hover:rotate-180 transition-transform duration-300" />
-              </button>
-            </Tooltip>
+            <button
+              className="flex items-center no-underline hover:text-amber-200 transition-colors duration-300 group"
+              onClick={toggleDropdown}
+            >
+              Plants{" "}
+              <ChevronDown className="w-4 h-4 ml-2 group-hover:rotate-180 transition-transform duration-300" />
+            </button>
             {isDropdownOpen && (
               <ul className="absolute top-8 right-0 mt-2 w-48 bg-amber-50 rounded-md shadow-lg py-2 z-10">
                 {PLANT_SUBMENU.map(({ name, path }) => (
@@ -113,41 +116,61 @@ function Navigation() {
             )}
           </li>
           <div className="relative flex items-center">
-            <Tooltip content="Tend to your account">
-              <User
-                className="w-6 h-6 cursor-pointer text-amber-100 hover:text-amber-200 transition-colors duration-300"
-                onClick={toggleUserDropdown}
-              />
-            </Tooltip>
-            {isUserDropdownOpen && (
-              <div className="absolute top-8 right-0 mt-2 w-36 bg-amber-50 rounded-md shadow-lg py-2 z-10">
-                {["Sign In", "Sign Up"].map((action) => (
-                  <button
-                    key={action}
-                    onClick={() =>
-                      navigate(`/${action.toLowerCase().replace(" ", "")}`)
-                    }
-                    className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
-                  >
-                    {action}
-                  </button>
-                ))}
-              </div>
+        <Tooltip content="Account">
+          <User
+            className="w-6 h-6 cursor-pointer text-amber-100 hover:text-amber-200 transition-colors duration-300"
+            onClick={toggleUserDropdown}
+          />
+        </Tooltip>
+        {isUserDropdownOpen && (
+          <div className="absolute top-8 right-0 mt-2 w-36 bg-amber-50 rounded-md shadow-lg py-2 z-10">
+            {user ? (
+              <>
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/signin")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="block w-full px-4 py-2 text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300 text-left"
+                >
+                  Sign Up
+                </button>
+              </>
             )}
           </div>
+        )}
+      </div>
           <div className="relative">
-            <Tooltip content="Your botanical basket">
+            <Tooltip content="Cart">
               <button
                 onClick={() => navigate("/cart")}
                 aria-label="View Cart"
                 className="text-amber-100 hover:text-amber-200 transition-colors duration-300"
               >
                 <ShoppingBag className="w-6 h-6" />
-                {/* {cartItemsCount > 0 && (
+                {cartItemsCount && (
                   <span className="absolute top-4 -right-2 inline-flex items-center justify-center py-1 px-1 text-xs leading-none text-red-100 bg-red-400 hover:bg-red-600 hover:scale-105 rounded-full">
                     {cartItemsCount}
                   </span>
-                )} */}
+                )}
               </button>
             </Tooltip>
           </div>

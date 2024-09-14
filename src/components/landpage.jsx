@@ -29,17 +29,11 @@ const LandingPage = () => {
           >
             <Link
               to="/signup"
-              className="bg-tertiary hover:bg-quinary text-white font-bold py-2 px-4 rounded-lg"
+              className="bg-tertiary flex items-center hover:scale-105 hover:bg-quaternary text-white font-bold w-fit py-2 px-4 rounded-lg"
               initial={{ opacity: 0, translate: "100%" }}
               whileInView={{ opacity: 1, translate: "0" }}
             >
-              Sign Up
-            </Link>
-            <Link
-              to="/signin"
-              className="bg-white hover:bg-green-100 text-quinary font-bold py-2 px-4 rounded-lg border border-quinary"
-            >
-              Sign In
+              Get started <ChevronRight />
             </Link>
           </motion.div>
         </motion.div>
