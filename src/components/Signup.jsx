@@ -2,6 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { sendEmailVerification, updateProfile, signOut } from "firebase/auth";
+import Validate from "./validate";
+import Input from "./UI/Input";
+import ErrorHandler from "./ErrorHandling";
+import Button from "./UI/Button";
 const SignUp = () => {
   const { createUser, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -21,48 +25,6 @@ const SignUp = () => {
     }
   }, [user, navigate, loading]);
 
-  const validate = () => {
-    if (!formData.username) {
-      setError("Username is required");
-      return false;
-    }
-    if (!formData.emailOrPhone) {
-      setError("Email or phone number is required");
-      return false;
-    }
-
-    if (
-      formData.emailOrPhone.includes("@") &&
-      !/\S+@\S+\.\S+/.test(formData.emailOrPhone)
-    ) {
-      setError("Email is invalid");
-      return false;
-    }
-    if (
-      !formData.emailOrPhone.includes("@") &&
-      !/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(
-        formData.emailOrPhone
-      )
-    ) {
-      setError("Phone number is invalid");
-      return false;
-    }
-    if (!formData.password) {
-      setError("Password is required");
-      return false;
-    }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return false;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return false;
-    }
-    setError("");
-    return true;
-  };
-
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -72,7 +34,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!(<Validate />)) return;
 
     setIsSigningUp(true);
     try {
@@ -87,7 +49,6 @@ const SignUp = () => {
         setVerificationSent(true);
         await signOut(newUser.auth);
       } else {
-        // Handle phone number verification if needed
         setError("Phone number verification not implemented yet");
         setIsSigningUp(false);
         return;
@@ -117,47 +78,36 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-signBg bg-cover">
-      <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded shadow-md w-full max-w-md ">
+      <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded-lg shadow-md w-full max-w-md ">
         <h1 className="text-2xl font-bold mb-6 text-center text-white">
           Sign Up
         </h1>
         {!verificationSent ? (
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="username"
+            <Input
               placeholder="Username"
-              className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-2 focus:border-green-600"
               value={formData.username}
               onChange={handleChange}
             />
-            <input
-              type="text"
-              name="emailOrPhone"
+            <Input
               placeholder="Email or Phone"
               className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-2 focus:border-green-600"
               value={formData.emailOrPhone}
               onChange={handleChange}
             />
-            <input
+            <Input
               type="password"
-              name="password"
               placeholder="Password"
-              className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-green-600 focus:border-2 "
               value={formData.password}
               onChange={handleChange}
             />
-            <input
+            <Input
               type="password"
-              name="confirmPassword"
               placeholder="Confirm Password"
-              className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-green-600 focus:border-2"
               value={formData.confirmPassword}
               onChange={handleChange}
             />
-            {error && (
-              <p className="text-red-500 text-xs italic mb-4">{error}</p>
-            )}
+            <ErrorHandler error={error} />
             <button
               type="submit"
               className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
@@ -183,15 +133,11 @@ const SignUp = () => {
               Verification email sent. Please check your inbox and verify your
               email.
             </p>
-            <button
+            <Button
               onClick={checkVerification}
-              className="w-full bg-tertiary text-white py-2 rounded-lg hover:bg-quaternary transition-colors"
-            >
-              I've verified my email
-            </button>
-            {error && (
-              <p className="text-red-500 text-xs italic mt-2">{error}</p>
-            )}
+              text="I've verified my email"
+            ></Button>
+            <ErrorHandler />
           </div>
         )}
       </div>
