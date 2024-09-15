@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
+import Loading from "./UI/Loader";
 
 const PrivateRoute = () => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    // Show a loading spinner or something similar
-    return <div>Loading...</div>;
+    return <div><Loading /></div>;
   }
 
   if (!user) {
