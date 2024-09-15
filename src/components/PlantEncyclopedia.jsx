@@ -49,7 +49,7 @@ const PlantEncyclopedia = () => {
   };
 
   return (
-    <div className="px-8 md:px-12 lg:px-24 pt-6 bg-sunflower bg-cover">
+    <div className="px-8 md:px-12 lg:px-24 pt-6 bg-[#F3E9D2] bg-cover">
       <div className="flex flex-col gap-6 pb-8">
         <div className="w-full">
           {loading ? (

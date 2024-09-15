@@ -10,6 +10,7 @@ import {
   getDoc,
   setDoc,
   deleteDoc,
+  runTransaction,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../firebaseConfig";
@@ -32,7 +33,7 @@ const Community = () => {
       setError("You must be logged in to view this page.");
       return;
     }
-
+  
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(
       q,
@@ -48,7 +49,7 @@ const Community = () => {
         setError("Failed to load posts. Please try again later.");
       }
     );
-
+  
     const fetchLikedPosts = async () => {
       try {
         const likedPostsRef = doc(db, "userLikedPosts", user.uid);
@@ -56,17 +57,18 @@ const Community = () => {
         if (likedPostsSnap.exists()) {
           setLikedPosts(likedPostsSnap.data());
         } else {
-          await setDoc(likedPostsRef, {});
+          await setDoc(likedPostsRef, {}); // Create an empty document if it doesn't exist
         }
       } catch (error) {
         console.error("Error fetching liked posts:", error);
       }
     };
-
+  
     fetchLikedPosts();
-
+  
     return () => unsubscribe();
   }, []);
+  
 
   const handleImageUpload = async (image) => {
     const imageRef = ref(storage, `posts/${Date.now()}_${image.name}`);
@@ -123,40 +125,64 @@ const Community = () => {
     [newPost, image, isEditing, editPostData]
   );
 
-  const handleLike = useCallback(
-    async (postId) => {
-      if (likedPosts[postId]) {
+  const handleLike = useCallback(async (postId) => {
+    const user = auth.currentUser;
+    if (!user) {
+      setLikeErrors((prev) => ({
+        ...prev,
+        [postId]: "You must be logged in to like posts.",
+      }));
+      return;
+    }
+  
+    const postRef = doc(db, "posts", postId);
+    const userLikedPostsRef = doc(db, "userLikedPosts", user.uid);
+  
+    try {
+      await runTransaction(db, async (transaction) => {
+        const postDoc = await transaction.get(postRef);
+        const userLikedPostsDoc = await transaction.get(userLikedPostsRef);
+  
+        if (!postDoc.exists()) throw new Error("Post does not exist.");
+        const postData = postDoc.data();
+        const userLikedPosts = userLikedPostsDoc.exists()
+          ? userLikedPostsDoc.data()
+          : {};
+  
+        // Check if the post is already liked by the user
+        const hasLiked = userLikedPosts[postId] === true;
+  
+        // Update likes count based on whether the user is liking or unliking
+        const newLikesCount = hasLiked
+          ? postData.likes - 1
+          : postData.likes + 1;
+  
+        // Update the user's liked posts and the post's like count in Firestore
+        transaction.update(postRef, { likes: newLikesCount });
+        transaction.set(
+          userLikedPostsRef,
+          { [postId]: !hasLiked }, // Toggle the like status
+          { merge: true }
+        );
+  
+        // Update local state
+        setLikedPosts((prev) => ({
+          ...prev,
+          [postId]: !hasLiked,
+        }));
         setLikeErrors((prev) => ({
           ...prev,
-          [postId]: "You've already liked this post.",
+          [postId]: null,
         }));
-        return;
-      }
-
-      try {
-        const user = auth.currentUser;
-        if (!user) throw new Error("User is not authenticated");
-
-        const likedPostsRef = doc(db, "userLikedPosts", user.uid);
-        await updateDoc(likedPostsRef, { [postId]: true });
-
-        const postRef = doc(db, "posts", postId);
-        await updateDoc(postRef, {
-          likes: (likedPosts[postId]?.likes || 0) + 1,
-        });
-
-        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
-        setLikeErrors((prev) => ({ ...prev, [postId]: null }));
-      } catch (error) {
-        console.error("Error liking post:", error);
-        setLikeErrors((prev) => ({
-          ...prev,
-          [postId]: "Failed to like post. Please try again later.",
-        }));
-      }
-    },
-    [likedPosts]
-  );
+      });
+    } catch (error) {
+      console.error("Error liking post:", error);
+      setLikeErrors((prev) => ({
+        ...prev,
+        [postId]: "Failed to like post. Please try again later.",
+      }));
+    }
+  }, [likedPosts]);
 
   const deletePost = useCallback(async (postId) => {
     try {
@@ -246,7 +272,7 @@ const Community = () => {
   const user = auth.currentUser;
 
   return (
-    <div className="container flex flex-col md:flex-row mx-auto px-4 md:px-12 lg:px-24 mt-4 gap-4">
+    <div className="bg-[#040201] flex flex-col md:flex-row mx-auto px-4 md:px-12 lg:px-24 p-6 gap-4">
       <div>
         <h1 className="text-3xl font-bold mb-4">Community</h1>
 
@@ -297,47 +323,54 @@ const Community = () => {
         {posts.map((post) => (
           <div
             key={post.id}
-            className="break-inside-avoid bg-white border rounded mb-4 text-center "
+            className="break-inside-avoid bg-white border rounded-lg mb-4 text-center "
           >
-            {post.imageUrl && (
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="w-full object-cover mb-2"
-              />
-            )}
-            <h2 className="text-xl font-bold">{post.title}</h2>
-            <p className="px-2">{post.description}</p>
-            <div className="flex justify-between px-4 my-2">
-              {user.uid === post.userId && (
-                <>
-                  <button
-                    className="text-gray-500 hover:text-tertiary"
-                    onClick={() => editPost(post)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => deletePost(post.id)}
-                  >
-                    Delete
-                  </button>
-                </>
-              )}
-            </div>
-            <div className="flex justify-between px-2 items-center mt-2 mb-4">
-              {user.uid !== post.userId && (
-                <button
-                  className="flex items-center text-tertiary"
-                  onClick={() => handleLike(post.id)}
-                >
-                  <Heart className="mr-1" />
-                  <span>{post.likes || 0}</span>
-                </button>
-              )}
-              <p>{likeErrors[post.id]}</p>
-            </div>
+            <div className="relative">
+  {post.imageUrl && (
+    <img
+      src={post.imageUrl}
+      alt={post.title}
+      className="w-full rounded-lg object-cover"
+    />
+  )}
+  <div className="absolute top-2 right-2 z-10">
+    <button
+      className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition duration-300"
+      onClick={() => handleLike(post.id)}
+    >
+      <Heart
+        className={`w-5 h-5 ${
+          likedPosts[post.id] ? "text-red-500 fill-current" : "text-gray-500"
+        }`}
+      />
+    </button>
+  </div>
+</div>
+<h2 className="text-xl font-bold">{post.title}</h2>
+<p className="px-2">{post.description}</p>
+
+{/* Display the number of likes */}
+<div className="flex justify-between px-4 my-2">
+  <span>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</span>
+
+  {user.uid === post.userId && (
+    <>
+      <button
+        className="text-gray-500 hover:text-tertiary"
+        onClick={() => editPost(post)}
+      >
+        Edit
+      </button>
+      <button
+        className="text-red-500 hover:text-red-700"
+        onClick={() => deletePost(post.id)}
+      >
+        Delete
+      </button>
+    </>
+  )}
+</div>
+
 
             {/* Comments Section */}
             <div className="text-left px-4 pb-4">

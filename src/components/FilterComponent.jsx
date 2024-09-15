@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Filter } from "lucide-react";
 import SearchBar from "./SearchBar";
+import Tooltip from "./UI/Tooltip";
 const FilterComponent = ({ onApplyFilters }) => {
   const [filters, setFilters] = useState({
     edible: "",
@@ -73,6 +74,8 @@ const FilterComponent = ({ onApplyFilters }) => {
           { value: "0", label: "No" },
         ])}
       </div>{" "}
+      <div>
+        <Tooltip content={"Filter"}>
       <button
         type="submit"
         className="text-green-950 hover:text-quaternary hover:scale-105 pr-2"
@@ -80,6 +83,8 @@ const FilterComponent = ({ onApplyFilters }) => {
         {" "}
         <Filter />{" "}
       </button>
+      </Tooltip>
+      </div>
     </form>
   );
 };

@@ -326,8 +326,8 @@ function ProductList() {
   );
 
   return (
-    <div className="flex flex-col w-11/12 mx-auto bg-gray-100 min-h-screen">
-      <div className="flex items-center md:items-start pl-28 mt-24">
+    <div className="flex flex-col w-full bg-gray-100 min-h-screen">
+      <div className="flex items-center md:items-start mt-24 px-4 md:px-12 lg:px-24">
         <button
           onClick={handlePlantsClick}
           className="text-green-600 text-3xl no-underline"

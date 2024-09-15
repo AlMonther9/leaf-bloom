@@ -10,11 +10,6 @@ module.exports = {
         tertiary: "#588157",
         quaternary: "#3A5A40",
         quinary: "#344E41",
-        gold: "#FFCB05",
-        gold2: "#FFC266",
-        gold3: "#FFB523",
-        gold4: "#FFA800",
-        gold5: "#FF9B00",
 
         beige: "#EAD7BA",
         beige2: "#fae7b0",
@@ -27,6 +22,7 @@ module.exports = {
         ccoki: "#A98467",
         pinky: "#E1C1B5",
         darkpink: "#9C6955",
+        beige6: "#F3E9D2",
       },
       backgroundImage: {
         smallland: "url('/src/assets/landsmall.jpg')",

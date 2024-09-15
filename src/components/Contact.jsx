@@ -54,7 +54,7 @@ const Contact = () => {
   };
 
   return (
-    <main className="pt-[3rem] pb-[2.5rem] ">
+    <main className="p-20 bg-sunflower bg-cover">
       <form
         ref={form}
         onSubmit={handleFormSubmission}
