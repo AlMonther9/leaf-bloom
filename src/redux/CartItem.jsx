@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { VintagePlantBackground, EarthyPlantBackground, GreenPlantBackground } from "../components/UI/ThemedPlantBg";
-import { addItem, removeItem, updateQuantity } from "./CartSlice";
+import { VintagePlantBackground } from "../components/UI/ThemedPlantBg";
+import { removeItem, updateQuantity } from "./CartSlice";
 import {
   ArrowRight,
   BadgeX,
@@ -9,9 +9,6 @@ import {
   SquareMinus,
   ShoppingBasketIcon,
 } from "lucide-react";
-import emailjs from "@emailjs/browser";
-import { collection, addDoc } from "firebase/firestore";
-import { db, auth } from "../firebaseConfig";
 export const useCartItemsCount = () => {
   const cart = useSelector((state) => state.cart.items);
   return cart.reduce((total, item) => total + item.quantity, 0);
@@ -61,57 +58,11 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
     return (parseCost(item.cost) * item.quantity).toFixed(2);
   };
 
-  const confirmOrder = async (cart, totalAmount) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        throw new Error("User is not authenticated");
-      }
-      const numericTotalAmount = parseFloat(totalAmount);
-      if (isNaN(numericTotalAmount)) {
-        throw new Error("Invalid total amount");
-      }
-      const orderDetails = {
-        userId: user.uid,
-        items: cart.map((item) => ({
-          name: item.name,
-          quantity: item.quantity,
-          cost: item.cost,
-          total: (
-            parseFloat(item.cost.replace("$", "")) * item.quantity
-          ).toFixed(2),
-        })),
-        totalAmount: totalAmount.toFixed(2),
-        orderDate: new Date().toISOString(),
-      };
-
-      await addDoc(collection(db, "orders"), orderDetails);
-
-      //   const emailParams = {
-      //     user_name: user.displayName || "Customer",
-      //     order_total: `$${totalAmount.toFixed(2)}`,
-      //     order_items: cart
-      //       .map((item) => `${item.name} (x${item.quantity}) - $${item.cost}`)
-      //       .join("\n"),
-      //     user_email: user.email,
-      //   };
-
-      //   await emailjs.send(
-      //     process.env.REACT_APP_SERVICE_ID,
-      //     process.env.REACT_APP_TEMPLATE_ID,
-      //     emailParams,
-      //     process.env.REACT_APP_USER_ID
-      //   );
-
-      alert("Order confirmed and email sent!");
-    } catch (error) {
-      console.error("Error confirming order:", error);
-      alert("There was an error processing your order. Please try again.");
-    }
-  };
-
   const handleCheckOutShopping = () => {
     alert("Order confirmed ");
+      cart.forEach(item => {
+      dispatch(removeItem(item.name));
+    });
   };
 
   return (
@@ -153,7 +104,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-6">
             {cart.map((item) => (
               <div
-                className="grid grid-cols-2 border border-quaternary rounded-lg hover:scale-105"
+                className="grid grid-cols-2 border border-quaternary rounded-lg hover:scale-105 transition-all duration-200"
                 key={item.name}
               >
                 <img
