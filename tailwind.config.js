@@ -10,7 +10,7 @@ module.exports = {
         tertiary: "#588157",
         quaternary: "#3A5A40",
         quinary: "#344E41",
-
+        greany: "#a8cdae",
         beige: "#EAD7BA",
         beige2: "#fae7b0",
         beige3: "#F9E7D4",
@@ -23,6 +23,7 @@ module.exports = {
         pinky: "#E1C1B5",
         darkpink: "#9C6955",
         beige6: "#F3E9D2",
+        beige7: "#d8c0c0",
       },
       backgroundImage: {
         smallland: "url('/src/assets/landsmall.jpg')",
