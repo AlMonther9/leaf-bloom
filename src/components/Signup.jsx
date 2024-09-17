@@ -6,6 +6,7 @@ import Validate from "./validate";
 import Input from "./UI/Input";
 import ErrorHandler from "./ErrorHandling";
 import Button from "./UI/Button";
+import Loading from "./UI/Loader";
 const SignUp = () => {
   const { createUser, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -75,7 +76,11 @@ const SignUp = () => {
       setError("Please sign in to check your email verification status.");
     }
   };
-
+  if (loading) {
+    return (
+      <Loading />
+    );
+    }
   return (
     <div className="flex justify-center items-center h-screen bg-signBg bg-cover">
       <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded-lg shadow-md w-full max-w-md ">

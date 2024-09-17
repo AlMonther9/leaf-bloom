@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 import ThreeDModel from "./ThreeDModel";
+import { VintagePlantBackground } from "./UI/ThemedPlantBg";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="font-sans relative bg-beige6 overflow-x-hidden">
+    < VintagePlantBackground>
+    <div className="font-sans relative overflow-x-hidden">
       {/* 3D Model Background */}
       <div
         className="absolute inset-0 z-50"
@@ -17,7 +19,7 @@ const LandingPage = () => {
         <ThreeDModel />
       </div>
       {/* Text and UI content */}
-      <div className="relative max-h-screen lg:min-h-screen flex pt-16 lg:items-center lg:justify-end z-10">
+      <div className="relative max-h-screen lg:min-h-screen flex pt-16 lg:items-center lg:justify-end">
         <motion.div
           className="max-w-4xl p-6 lg:pr-24 lg:ml-0 lg:mt-0"
           initial={{ opacity: 0, translateY: "100%" }}
@@ -253,6 +255,7 @@ const LandingPage = () => {
         </div>
       </div>
     </div>
+    </VintagePlantBackground>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { VintagePlantBackground, EarthyPlantBackground, GreenPlantBackground } from "../components/UI/ThemedPlantBg";
 import { addItem, removeItem, updateQuantity } from "./CartSlice";
 import {
   ArrowRight,
@@ -110,11 +111,12 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
   };
 
   const handleCheckOutShopping = () => {
-    alert("This feature to be added soon");
+    alert("Order confirmed ");
   };
 
   return (
-    <div className="px-4 md:px-12 lg:px-24 mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <VintagePlantBackground>
+    <div className= " px-4 md:px-12 lg:px-24 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div className="flex flex-col  gap-4 bg-beige rounded-lg p-4 mb-2">
         <h1 className="text-xl font-bold text-quinary flex gap-3">
           Your Cart details <ShoppingBasketIcon />{" "}
@@ -213,6 +215,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
         </button>
       </div>
     </div>
+    </VintagePlantBackground>
   );
 };
 

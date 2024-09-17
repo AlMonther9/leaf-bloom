@@ -15,6 +15,7 @@ import {
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../firebaseConfig";
 import { Heart } from "lucide-react";
+import { VintagePlantBackground } from "./UI/ThemedPlantBg";
 
 const Community = () => {
   const [posts, setPosts] = useState([]);
@@ -272,9 +273,10 @@ const Community = () => {
   const user = auth.currentUser;
 
   return (
-    <div className="bg-[#040201] flex flex-col md:flex-row mx-auto px-4 md:px-12 lg:px-24 p-6 gap-4">
+    < VintagePlantBackground>
+    <div className=" flex flex-col md:flex-row mx-auto px-4 md:px-12 lg:px-24 p-6 gap-4">
       <div>
-        <h1 className="text-3xl text-zinc-50 font-bold mb-4">Community</h1>
+        <h1 className="text-3xl text-zinc-950 font-bold mb-4">Community</h1>
 
         {error && (
           <div
@@ -415,6 +417,7 @@ const Community = () => {
         ))}
       </div>
     </div>
+    </VintagePlantBackground>
   );
 };
 
