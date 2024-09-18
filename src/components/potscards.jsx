@@ -24,7 +24,7 @@ const PotsCards = () => {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-10 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
+    <div className="grid grid-cols-1 gap-12 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
       {potsArray.plant1.map((pot) => (
         <ItemCard
           key={pot.id}

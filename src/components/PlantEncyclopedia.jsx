@@ -51,47 +51,47 @@ const PlantEncyclopedia = () => {
 
   return (
     <VintagePlantBackground>
-    <div className="px-8 md:px-12 lg:px-24 pt-6">
-      <div className="flex flex-col gap-6 pb-8">
-        <div className="w-full">
-          {loading ? (
-            <Loading />
-          ) : searchResults ? (
-            <div>
-              <h3 className="text-xl font-semibold text-[#3A5A40] mt-6 mb-4">
-                Search Results
-              </h3>
-              <PlantList
-                plants={searchResults.data}
-                page={page}
-                setPage={setPage}
-                totalPages={searchResults.last_page}
-                isSearchResult={true}
-              />
-            </div>
-          ) : (
-            <div>
-              <div className="flex flex-col md:flex-row gap-3  justify-evenly items-center mb-4 md:mb-8">
-                <h1 className="text-4xl font-semibold text-green-800">
-                  Featured Plants
-                </h1>{" "}
-                <SearchBar onSearch={handleSearch} />{" "}
+      <div className="px-8 pt-6 font-sans md:px-12 lg:px-24">
+        <div className="flex flex-col gap-6 pb-8">
+          <div className="w-full">
+            {loading ? (
+              <Loading />
+            ) : searchResults ? (
+              <div>
+                <h3 className="text-xl font-semibold text-[#3A5A40] mt-6 mb-4">
+                  Search Results
+                </h3>
+                <PlantList
+                  plants={searchResults.data}
+                  page={page}
+                  setPage={setPage}
+                  totalPages={searchResults.last_page}
+                  isSearchResult={true}
+                />
               </div>
-              <div className="w-full">
-                <FilterComponent onApplyFilters={handleApplyFilters} />
+            ) : (
+              <div>
+                <div className="flex flex-col items-center gap-3 mb-4 md:flex-row justify-evenly md:mb-8">
+                  <h1 className="text-4xl font-semibold text-green-800">
+                    Learn About Plants
+                  </h1>{" "}
+                  <SearchBar onSearch={handleSearch} />{" "}
+                </div>
+                <div className="w-full">
+                  <FilterComponent onApplyFilters={handleApplyFilters} />
+                </div>
+                <PlantList
+                  plants={plants}
+                  page={page}
+                  setPage={setPage}
+                  totalPages={totalPages}
+                  isSearchResult={false}
+                />
               </div>
-              <PlantList
-                plants={plants}
-                page={page}
-                setPage={setPage}
-                totalPages={totalPages}
-                isSearchResult={false}
-              />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </VintagePlantBackground>
   );
 };
