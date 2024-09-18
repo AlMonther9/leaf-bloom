@@ -1,9 +1,11 @@
 import React from 'react';
 import { Leaf, Flower, Sun, Wind } from 'lucide-react';
+import { VintagePlantBackground } from './UI/ThemedPlantBg';
 
 function About() {
   return (
-    <div className="bg-amber-50 min-h-screen">
+    <VintagePlantBackground>
+    <div className=" min-h-screen">
       <div className="container mx-auto p-6 pt-12 md:p-12 lg:p-24 xl:p-32">
         <h1 className="text-4xl md:text-5xl font-serif font-bold mb-8 text-green-800 text-center">About Leaf & Bloom</h1>
         <div className="max-w-4xl mx-auto space-y-8">
@@ -64,6 +66,7 @@ function About() {
         </div>
       </div>
     </div>
+    </VintagePlantBackground>
   );
 }
 

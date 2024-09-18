@@ -4,6 +4,7 @@ import FilterComponent from "./FilterComponent";
 import PlantList from "./PlantList";
 import { getPlants, searchPlants } from "../api/api";
 import Loading from "./UI/Loader";
+import { VintagePlantBackground } from "./UI/ThemedPlantBg";
 
 const PlantEncyclopedia = () => {
   const [plants, setPlants] = useState([]);
@@ -49,7 +50,8 @@ const PlantEncyclopedia = () => {
   };
 
   return (
-    <div className="px-8 md:px-12 lg:px-24 pt-6 bg-[#F3E9D2] bg-cover">
+    <VintagePlantBackground>
+    <div className="px-8 md:px-12 lg:px-24 pt-6">
       <div className="flex flex-col gap-6 pb-8">
         <div className="w-full">
           {loading ? (
@@ -90,6 +92,7 @@ const PlantEncyclopedia = () => {
         </div>
       </div>
     </div>
+    </VintagePlantBackground>
   );
 };
 

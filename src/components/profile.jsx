@@ -35,9 +35,9 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-signBg bg-cover">
-      <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-white">Profile</h1>
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-signBg">
+      <div className="w-full max-w-md p-6 m-auto bg-opacity-50 rounded shadow-md backdrop-blur-2xl">
+        <h1 className="mb-6 text-2xl font-bold text-center text-white">Profile</h1>
         <div className="mb-4">
           <p className="text-white">Email: {user.email}</p>
           {isEditing ? (
@@ -50,7 +50,7 @@ const Profile = () => {
               />
               <button
                 onClick={handleUpdateProfile}
-                className="mt-2 bg-green-600 text-white py-1 px-2 rounded hover:bg-green-700"
+                className="px-2 py-1 mt-2 text-white bg-green-600 rounded hover:bg-green-700"
               >
                 Save
               </button>
@@ -67,10 +67,10 @@ const Profile = () => {
             </p>
           )}
         </div>
-        {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
+        {error && <p className="mb-4 text-xs italic text-red-500">{error}</p>}
         <button
           onClick={handleLogout}
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          className="w-full py-2 text-white bg-green-600 rounded hover:bg-green-700"
         >
           Logout
         </button>
