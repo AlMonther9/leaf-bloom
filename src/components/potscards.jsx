@@ -10,7 +10,11 @@ const PotsCards = () => {
 
   const handleAddToCart = useCallback(
     (pot) => {
-      dispatch(addItem(pot));
+      const itemToAdd = {
+        ...pot,
+        cost: pot.price,
+      };
+      dispatch(addItem(itemToAdd));
       setAddedToCart((prevState) => ({
         ...prevState,
         [pot.id]: true,
@@ -20,7 +24,7 @@ const PotsCards = () => {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-5 place-items-center">
+    <div className="grid grid-cols-1 gap-10 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
       {potsArray.plant1.map((pot) => (
         <ItemCard
           key={pot.id}
