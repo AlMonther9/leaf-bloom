@@ -1,4 +1,4 @@
-# Leaf & Bloom 🌿
+# Leaf & Bloom ![Leaf & Bloom](public/favicon.ico)
 
 Welcome to **Leaf & Bloom**, a plant-themed platform designed to help plant enthusiasts explore, purchase, and learn about various plants. This application integrates modern frontend technologies to provide an immersive, user-friendly experience. 🌱
 
