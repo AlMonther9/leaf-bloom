@@ -70,18 +70,18 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
 
   return (
     <VintagePlantBackground>
-      <div className=" px-4 md:px-12 lg:px-24 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="flex flex-col  gap-4 bg-beige rounded-lg p-4 mb-2">
-          <h1 className="text-xl font-bold text-quinary flex gap-3">
+      <div className="grid grid-cols-1 gap-4 px-4 pt-16  md:px-12 lg:px-24 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col gap-4 p-4 mb-2 rounded-lg bg-beige">
+          <h1 className="flex gap-3 text-xl font-bold text-quinary">
             Your Cart details <ShoppingBasketIcon />{" "}
           </h1>
           <h2 className="py-2 font-semibold text-quinary">
             Total Cart Amount:{" "}
             <span className="font-normal"> ${totalAmount}</span>
           </h2>
-          <div className="flex gap-3 flex-col">
+          <div className="flex flex-col gap-3">
             {cart.map((item) => (
-              <div className="flex border border-tertiary justify-between rounded-lg px-2 py-1 text-browny">
+              <div className="flex justify-between px-2 py-1 border rounded-lg border-tertiary text-browny">
                 <h4>{item.name}</h4>
                 <span className="text-sm">
                   Total: ${calculateTotalCost(item)}
@@ -90,7 +90,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
             ))}
           </div>
           <button
-            className="bg-browny border-browny relative flex gap-1 items-center hover:scale-105 hover:bg-ccoki hover:border-ccoki font-bold text-white py-2 px-4 rounded-md w-fit mx-auto my-4"
+            className="relative flex items-center gap-1 px-4 py-2 mx-auto my-4 font-bold text-white rounded-md bg-browny border-browny hover:scale-105 hover:bg-ccoki hover:border-ccoki w-fit"
             onClick={handleCheckOutShopping}
           >
             Checkout{" "}
@@ -102,12 +102,12 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
           />
         </div>
 
-        <div className="flex flex-col items-center gap-4 md:gap-8 mb-8 w-full col-start-2 col-end-4">
+        <div className="flex flex-col items-center w-full col-start-2 col-end-4 gap-4 mb-8 md:gap-8">
           {cart.length > 0 ? (
-            <div className=" grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6  lg:grid-cols-2">
               {cart.map((item) => (
                 <div
-                  className="grid grid-cols-2 border border-quaternary rounded-lg hover:scale-105 transition-all duration-200"
+                  className="grid grid-cols-2 transition-all duration-200 border rounded-lg border-quaternary hover:scale-105"
                   key={item.name}
                 >
                   <img
@@ -115,9 +115,9 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
                     src={item.image}
                     alt={item.name}
                   />
-                  <div className="flex flex-row items-center ml-8 justify-between">
+                  <div className="flex flex-row items-center justify-between ml-8">
                     <div className="">
-                      <h2 className="font-semibold text-xl text-browny py-2 w-full">
+                      <h2 className="w-full py-2 text-xl font-semibold text-browny">
                         {item.name}
                       </h2>
                       <div className="flex items-center">
@@ -129,7 +129,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
                           <SquareMinus />
                         </button>
 
-                        <span className="font-semibold text-quaternary px-4 text-2xl">
+                        <span className="px-4 text-2xl font-semibold text-quaternary">
                           {item.quantity}
                         </span>
                         <button
@@ -140,7 +140,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
                           <SquarePlus></SquarePlus>
                         </button>
                       </div>
-                      <div className="flex flex-col mt-3 justify-between  gap-2">
+                      <div className="flex flex-col justify-between gap-2 mt-3">
                         <span className="text-sm">Price: {item.cost}</span>
                         <span className="text-sm">
                           Total: ${calculateTotalCost(item)}
@@ -149,7 +149,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
                     </div>
                     <button
                       aria-label={`Remove ${item.name} from cart`}
-                      className="text-red-500 hover:text-red-700 mr-4"
+                      className="mr-4 text-red-500 hover:text-red-700"
                       onClick={() => handleRemove(item)}
                     >
                       <BadgeX />
@@ -162,7 +162,7 @@ const CartItem = ({ onContinueShopping = () => {} }) => {
             <p>Your cart is empty</p>
           )}
           <button
-            className="bg-tertiary text-white py-2 px-4 rounded-full hover:scale-105 flex gap-1 items-center"
+            className="flex items-center gap-1 px-4 py-2 text-white rounded-full bg-tertiary hover:scale-105"
             onClick={handleContinueShopping}
           >
             Continue Shopping <ArrowRight />

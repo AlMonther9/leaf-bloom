@@ -22,7 +22,11 @@ function ProductList() {
 
   const handleAddToCart = useCallback(
     (plant) => {
-      dispatch(addItem(plant));
+      const itemToAdd = {
+        ...plant,
+        cost: plant.price,
+      };
+      dispatch(addItem(itemToAdd));
       setAddedToCart((prevState) => ({
         ...prevState,
         [plant.name]: true,
@@ -44,10 +48,10 @@ function ProductList() {
     () =>
       plantCategories.map((category, index) => (
         <div key={index} className="w-full">
-          <h1 className="text-left font-bold text-2xl my-5 text-quaternary">
+          <h1 className="my-5 text-2xl font-bold text-left text-quaternary">
             <div>{category.category}</div>
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-5 place-items-center">
+          <div className="grid grid-cols-1 gap-10 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
             {category.plants.map((plant, plantIndex) => (
               <ItemCard
                 key={plantIndex}
@@ -64,11 +68,11 @@ function ProductList() {
 
   return (
     <VintagePlantBackground>
-      <div className="flex flex-col px-4 md:px-12 lg:px-24 min-h-screen">
-        <div className="flex items-center md:items-start mt-24">
+      <div className="flex flex-col min-h-screen px-4 mb-4 md:px-12 lg:px-24 ">
+        <div className="flex items-center mt-16 md:items-start">
           <button
             onClick={handlePlantsClick}
-            className="text-quinary text-3xl no-underline font-bold"
+            className="text-3xl font-bold no-underline text-quinary"
           >
             Plants By Category
           </button>
@@ -83,13 +87,13 @@ function ProductList() {
             {plantCategories.length > 0 ? (
               renderPlantCategories()
             ) : (
-              <div className="text-center text-2xl text-gray-600">
+              <div className="text-2xl text-center text-gray-600">
                 No plants available. Please check back later.
               </div>
             )}
           </div>
         )}
-        <h3 className="text-3xl text-quinary my-8 font-bold">Pots</h3>
+        <h3 className="my-8 text-3xl font-bold text-quinary">Pots</h3>
         <PotsCards />
       </div>
     </VintagePlantBackground>
