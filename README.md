@@ -1,4 +1,4 @@
-# Leaf & Bloom ![Leaf & Bloom](public/favicon.ico)
+# Leaf & Bloom <img src="public/favicon.ico" alt="Leaf & Bloom" width="24"/>
 
 Welcome to **Leaf & Bloom**, a plant-themed platform designed to help plant enthusiasts explore, purchase, and learn about various plants. This application integrates modern frontend technologies to provide an immersive, user-friendly experience. 🌱
 
