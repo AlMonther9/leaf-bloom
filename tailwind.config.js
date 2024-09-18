@@ -26,12 +26,9 @@ module.exports = {
         beige7: "#d8c0c0",
       },
       backgroundImage: {
-        smallland: "url('/src/assets/landsmall.jpg')",
-        land: "url('/src/assets/landbg.jpg')",
         sign: "url('/src/assets/signin.jpg')",
         signBg: "url('/src/assets/signup.jpg')",
         shopping: "url('src/assets/shopping.png')",
-        sunflower: "url('src/assets/sunflowrs.jpg')",
       },
       fontFamily: {
         sans: ["Nunito", ...theme.fontFamily.sans],
