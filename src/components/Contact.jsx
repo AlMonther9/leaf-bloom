@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import { Boxes } from "./UI/backgroundBox";
+import { cn } from "../lib/utils";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +19,9 @@ const Contact = () => {
     if (!formData.get("message")) errors.message = "Message cannot be empty";
     return errors;
   };
+
   const form = useRef();
+
   const handleFormSubmission = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -49,28 +53,31 @@ const Contact = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         e.target.reset();
-      }, 4000); // Delay form reset for 4 seconds
+      }, 4000);
     }
   };
 
   return (
-    <main className="p-20 bg-sunflower bg-cover">
+    <main className="relative flex items-center justify-center h-screen overflow-hidden bg">
+      <div className="absolute inset-0 w-full h-full bg-quinary z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+
       <form
         ref={form}
         onSubmit={handleFormSubmission}
-        className="mt-[3rem] max-w-md mx-auto p-6 bg-gradient-to-br from-green-50 to-yellow-50 rounded-lg shadow-lg border border-green-200 transform hover:scale-105 transition-transform duration-300"
+        className="relative z-20 max-w-md px-12 py-6 transition-transform duration-300 transform rounded-lg shadow-md bg-opacity-80 backdrop-blur-lg"
       >
-        <h2 className="text-3xl font-extrabold mb-6 text-green-800 text-center">
+        <h2 className="mb-6 text-3xl font-extrabold text-center text-green-800">
           Grow With Us
         </h2>
 
         <div className="space-y-4">
           <label className="block">
-            <span className="text-green-700 font-semibold">Your Name</span>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span className="font-semibold text-green-700">Your Name</span>
+            <div className="relative mt-1 rounded-lg shadow-sm">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-green-500"
+                  className="w-5 h-5 text-green-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -84,11 +91,11 @@ const Contact = () => {
               <input
                 type="text"
                 name="user_name"
-                className="block w-full pl-10 pr-3 py-2 border border-green-300 rounded-md leading-5 bg-white placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-300 bg-white border border-green-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder="Jane Doe"
               />
               {formErrors.user_name && (
-                <p className="text-red-600 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {formErrors.user_name}
                 </p>
               )}
@@ -96,11 +103,11 @@ const Contact = () => {
           </label>
 
           <label className="block">
-            <span className="text-green-700 font-semibold">Your Email</span>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span className="font-semibold text-green-700">Your Email</span>
+            <div className="relative mt-1 rounded-lg shadow-sm">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-green-500"
+                  className="w-5 h-5 text-green-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -111,11 +118,11 @@ const Contact = () => {
               <input
                 type="email"
                 name="user_email"
-                className="block w-full pl-10 pr-3 py-2 border border-green-300 rounded-md leading-5 bg-white placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-300 bg-white border border-green-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder="jane@example.com"
               />
               {formErrors.user_email && (
-                <p className="text-red-600 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {formErrors.user_email}
                 </p>
               )}
@@ -123,11 +130,11 @@ const Contact = () => {
           </label>
 
           <label className="block">
-            <span className="text-green-700 font-semibold">Your Message</span>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 pt-3 flex items-start pointer-events-none">
+            <span className="font-semibold text-green-700">Your Message</span>
+            <div className="relative mt-1 rounded-lg shadow-sm">
+              <div className="absolute inset-y-0 left-0 flex items-start pt-3 pl-3 pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-green-500"
+                  className="w-5 h-5 text-green-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -141,11 +148,11 @@ const Contact = () => {
               <textarea
                 name="message"
                 rows="4"
-                className="block resize-none w-full pl-10 pr-3 py-2 border border-green-300 rounded-md leading-5 bg-white placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-300 bg-white border border-green-300 rounded-lg resize-none focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder="Let your thoughts bloom..."
               ></textarea>
               {formErrors.message && (
-                <p className="text-red-600 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {formErrors.message}
                 </p>
               )}
@@ -157,11 +164,11 @@ const Contact = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out transform hover:scale-105"
+            className="flex justify-center w-full px-4 py-3 text-sm font-medium text-white transition duration-150 ease-in-out transform bg-green-600 border border-transparent rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-offset-2 focus:ring-green-500 hover:scale-105"
           >
             {isSubmitting ? (
               <svg
-                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                className="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -187,7 +194,7 @@ const Contact = () => {
         </div>
 
         {stateMessage && (
-          <p className="mt-4 text-sm text-center text-green-600 bg-green-100 rounded-md py-2 px-4 animate-pulse">
+          <p className="px-4 py-2 mt-4 text-sm text-center text-white bg-green-500 rounded-lg">
             {stateMessage}
           </p>
         )}
