@@ -7,11 +7,11 @@ export const BoxesCore = ({ className, ...rest }) => {
   const rows = new Array(150).fill(1);
   const cols = new Array(100).fill(1);
   let colors = [
-    "--sky-300",
+    "--yellow-500",
     "--pink-300",
     "--green-300",
     "--yellow-300",
-    "--red-300",
+    "--amber-200",
     "--purple-300",
     "--blue-300",
     "--indigo-300",
