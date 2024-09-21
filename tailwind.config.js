@@ -1,4 +1,9 @@
 const { theme } = require("tailwindcss/defaultConfig");
+const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
@@ -26,12 +31,9 @@ module.exports = {
         beige7: "#d8c0c0",
       },
       backgroundImage: {
-        smallland: "url('/src/assets/landsmall.jpg')",
-        land: "url('/src/assets/landbg.jpg')",
         sign: "url('/src/assets/signin.jpg')",
         signBg: "url('/src/assets/signup.jpg')",
         shopping: "url('src/assets/shopping.png')",
-        sunflower: "url('src/assets/sunflowrs.jpg')",
       },
       fontFamily: {
         sans: ["Nunito", ...theme.fontFamily.sans],
@@ -39,5 +41,18 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+
+  plugins: [addVariablesForColors],
 };
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

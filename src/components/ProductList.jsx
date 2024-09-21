@@ -16,10 +16,6 @@ function ProductList() {
     setShowCart(false);
   }, []);
 
-  const handleContinueShopping = useCallback(() => {
-    setShowCart(false);
-  }, []);
-
   const handleAddToCart = useCallback(
     (plant) => {
       const itemToAdd = {
@@ -51,7 +47,7 @@ function ProductList() {
           <h1 className="my-5 text-2xl font-bold text-left text-quaternary">
             <div>{category.category}</div>
           </h1>
-          <div className="grid grid-cols-1 gap-10 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
+          <div className="grid grid-cols-1 gap-12 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
             {category.plants.map((plant, plantIndex) => (
               <ItemCard
                 key={plantIndex}
@@ -79,9 +75,7 @@ function ProductList() {
         </div>
 
         {showCart ? (
-          {
-            /* <CartItem onContinueShopping={handleContinueShopping} /> */
-          }
+          {}
         ) : (
           <div className="flex flex-col items-center justify-center">
             {plantCategories.length > 0 ? (
