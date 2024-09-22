@@ -184,12 +184,12 @@ function Navigation() {
                 <ChevronDown className="h-4 w-4 transition-transform duration-300" style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </button>
               {isDropdownOpen && (
-                <ul className="bg-green-800 rounded-md mt-1 py-1">
+                <ul className="bg-quinary rounded-md mt-1 py-1">
                   {PLANT_SUBMENU.map(({ name, path }) => (
-                    <li key={name}>
+                    <li key={name} className="py-2">
                       <a
                         href={path}
-                        className="block w-full text-left text-sm text-green-800 hover:bg-amber-100 hover:text-green-900 transition-colors duration-300"
+                        className="relative w-full left-9 text-sm text-amber-100 transition-colors duration-300"
                         onClick={() => {
                           setIsDropdownOpen(false);
                           setIsMenuOpen(false);
