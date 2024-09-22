@@ -7,12 +7,13 @@ import Input from "./UI/Input";
 import ErrorHandler from "./ErrorHandling";
 import Button from "./UI/Button";
 import Loading from "./UI/Loader";
+import { Boxes } from "./UI/backgroundBox";
 const SignUp = () => {
   const { createUser, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
-    emailOrPhone: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -25,12 +26,12 @@ const SignUp = () => {
       navigate("/");
     }
   }, [user, navigate, loading]);
-
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,13 +40,13 @@ const SignUp = () => {
 
     setIsSigningUp(true);
     try {
-      const { username, emailOrPhone, password } = formData;
-      const userCredential = await createUser(emailOrPhone, password);
+      const { username, email, password } = formData;
+      const userCredential = await createUser(email, password);
       const newUser = userCredential.user;
 
       await updateProfile(newUser, { displayName: username });
 
-      if (emailOrPhone.includes("@")) {
+      if (email.includes("@")) {
         await sendEmailVerification(newUser);
         setVerificationSent(true);
         await signOut(newUser.auth);
@@ -77,76 +78,94 @@ const SignUp = () => {
     }
   };
   if (loading) {
-    return (
-      <Loading />
-    );
-    }
+    return <Loading />;
+  }
   return (
-    <div className="flex justify-center items-center h-screen bg-signBg bg-cover">
-      <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded-lg shadow-md w-full max-w-md ">
-        <h1 className="text-2xl font-bold mb-6 text-center text-white">
-          Sign Up
-        </h1>
-        {!verificationSent ? (
-          <form onSubmit={handleSubmit}>
-            <Input
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="Email or Phone"
-              className="w-full p-2 mb-4 border border-gray-300 rounded outline-none focus:border-2 focus:border-green-600"
-              value={formData.emailOrPhone}
-              onChange={handleChange}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <Input
-              type="password"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            <ErrorHandler error={error} />
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-              disabled={isSigningUp}
-            >
-              {isSigningUp ? "Signing Up..." : "Sign Up"}
-            </button>
-            <p className="flex text-white gap-2 mt-2 justify-center">
-              {" "}
-              Already have an account?
+    <main className="relative flex items-center justify-center h-screen overflow-hidden bg">
+      <div className="absolute inset-0 w-full h-full bg-quinary z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+      <div className="flex flex-col items-center justify-center gap-20 md:flex-row">
+        <div className="z-30 w-full max-w-md p-6 rounded-lg shadow-md backdrop-blur-2xl bg-quaternary ">
+          <h1 className="mb-6 text-2xl font-bold text-center text-white">
+            Sign Up
+          </h1>
+          {!verificationSent ? (
+            <form onSubmit={handleSubmit}>
+              <Input
+                name="username"
+                type="text"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+
+              <Input
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+
+              <Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+
+              <Input
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+
+              <ErrorHandler error={error} />
               <button
-                type="button"
-                onClick={() => navigate("/signin")}
-                className=" text-white rounded hover:text-green-700"
+                type="submit"
+                className="w-full py-2 transition-colors duration-75 rounded-lg bg-beige2 hover:bg-[#d6c48d] text-tertiary font-semibold"
+                disabled={isSigningUp}
               >
-                Sign In
+                {isSigningUp ? "Signing Up..." : "Sign Up"}
               </button>
-            </p>
-          </form>
-        ) : (
-          <div>
-            <p className="text-green-500 text-sm mb-4">
-              Verification email sent. Please check your inbox and verify your
-              email.
-            </p>
-            <Button
-              onClick={checkVerification}
-              text="I've verified my email"
-            ></Button>
-            <ErrorHandler />
-          </div>
-        )}
+              <p className="flex justify-center gap-2 mt-2 text-white">
+                {" "}
+                Already have an account?
+                <button
+                  type="button"
+                  onClick={() => navigate("/signin")}
+                  className="underline transition-colors hover:text-beige2"
+                >
+                  Sign In
+                </button>
+              </p>
+            </form>
+          ) : (
+            <div>
+              <p className="mb-4 text-sm text-green-500">
+                Verification email sent. Please check your inbox and verify your
+                email.
+              </p>
+              <Button
+                onClick={checkVerification}
+                text="I've verified my email"
+              ></Button>
+              <ErrorHandler />
+            </div>
+          )}
+        </div>
+        <div className="hidden w-1/3 md:flex ">
+          <img
+            src={require("../assets/flowerSteps.png")}
+            alt=""
+            className="w-full"
+          />
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 
