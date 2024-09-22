@@ -1,105 +1,118 @@
-# Leaf & Bloom
+# Leaf & Bloom <img src="public/favicon.ico" alt="Leaf & Bloom" width="24"/>
 
-Leaf & Bloom is a comprehensive platform for plant enthusiasts, offering a wide range of features from plant shopping to community engagement and expert care advice.
+Welcome to **Leaf & Bloom**, a plant-themed platform designed to help plant enthusiasts explore, purchase, and learn about various plants. This application integrates modern frontend technologies to provide an immersive, user-friendly experience. 🌱
 
 ## Table of Contents
+
+- [Project Overview](#project-overview)
 - [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
 - [Usage](#usage)
-- [API Reference](#api-reference)
+- [Areas of Improvement](#areas-of-improvement)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
+
+---
+
+## Project Overview
+
+**Leaf & Bloom** is your go-to platform for small plant sales, where customers can explore curated collections of plants, purchase them, and learn more about plant care. Our vision is to create a modern, intuitive platform where plant lovers can effortlessly search for their perfect plant match.
+
+---
 
 ## Features
 
-- **Plant Shopping**: Browse and purchase a wide variety of plants.
-- **Community Engagement**: Share your plants, experiences, and tips with other plant lovers.
-- **Expert Care Advice**: Access a wealth of information on plant care and maintenance.
-- **User Authentication**: Secure sign-up and sign-in functionality.
-- **Responsive Design**: Fully responsive web application for seamless use across devices.
+- 🌵 **Plant Listings**: Browse through a vast collection of plants, complete with detailed information and care tips.
+- 🌿 **Plant Search**: Search for plants by name, category, or care requirements.
+- 💧 **Care Information**: Detailed guides on how to take care of each plant.
+- 🛒 **Shopping Cart**: Add plants to your cart and complete purchases easily.
+- 💚 **Community Features**: Like Pinterest, users can share images of their plants and engage in discussions with other plant lovers, creating an interactive and supportive environment for plant care enthusiasts.
 
-## Technologies Used
+---
 
-- React.js
-- React Router for navigation
-- Framer Motion for animations
-- Firebase for authentication and data storage
-- Tailwind CSS for styling
-- Lucide React for icons
-- External API for plant gallery (specify which API if applicable)
+## Tech Stack
 
-## Getting Started
+### Frontend
+- **React**: Component-based UI development.
+- **Tailwind CSS**: Styling framework for a modern, responsive UI.
+- **Redux**: State management for the entire app.
+- **Three.js (React-Three-Fiber)**: 3D model rendering for interactive plant visuals.
+- **Framer Motion**: Smooth animations and transitions.
+- **React Lucide**: Icon library for easy and customizable icons.
+- **EmailJS**: For handling email notifications and direct communication with users.
+- **Vercel**: Deployment and hosting.
 
-### Prerequisites
+### Backend
+- **Firebase Firestore**: Realtime database to store posts, comments, and likes.
+- **Firebase Authentication**: Secure user authentication for the platform.
 
-- Node.js (v14.0.0 or later)
-- npm (v6.0.0 or later)
+---
 
-### Installation
+### **Credits for 3D Models**
 
-1. Clone the repository:
-   ```
+We give credit to [Sketchfab](https://sketchfab.com/3d-models/garden-urn-c0c7f5fa24704a23b0f3cbdd689b8176) for the 3D plant model used in the project.
+
+---
+
+## Installation
+
+To run this project locally, follow these steps:
+
+1. **Clone the Repository**:
+   ```bash
    git clone https://github.com/AlMonther9/leaf-and-bloom.git
-   ```
-
-2. Navigate to the project directory:
-   ```
    cd leaf-and-bloom
    ```
 
-3. Install the dependencies:
-   ```
+2. **Install Dependencies**:
+   ```bash
    npm install
    ```
 
-4. Create a `.env` file in the root directory and add your Firebase configuration:
-   ```
-   REACT_APP_FIREBASE_API_KEY=your_api_key
-   REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
-   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-   REACT_APP_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-   REACT_APP_FIREBASE_APP_ID=your_app_id
-   ```
-
-5. Start the development server:
-   ```
+3. **Start the Application**:
+   ```bash
    npm start
    ```
 
+4. **Environment Variables**:
+   Make sure to set up Firebase API keys and other environment variables for backend connectivity.
+
+---
+
 ## Usage
 
-After starting the development server, open your browser and navigate to `http://localhost:3000`. You should see the Leaf & Bloom landing page.
+- **Browse Plants**: Explore the plant catalog, filter by type, and view detailed care instructions.
+- **Community Interaction**: Like Pinterest, users can share images of their plants alongside discussions.
+- **Purchase Plants**: Add your desired plants to the cart and proceed with a simple checkout process.
 
-## API Reference
+---
 
-Leaf & Bloom uses the Perenual API to fetch plant data. The API interactions are handled in a separate file, typically named api.js. Here's an overview of the available API functions:
+## Areas of Improvement
 
-- getPlants(page, filters): Fetches a list of plants with optional pagination and filters.
-- getPlantDetails(id): Retrieves detailed information about a specific plant.
-- searchPlants(query): Searches for plants based on a query string.
-- getPestDiseaseList(page, query): Fetches a list of pests and diseases with optional pagination and search.
-- getCareGuides(speciesId, page): Retrieves care guides for a specific plant species.
-- getFAQs(page, query): Fetches frequently asked questions with optional pagination and search.
+- **Build our own API**: To customize features like search, cart management, and user profiles.
+- **Enhanced Search**: Improve search functionality by adding filters for care difficulty, size, and more.
+- **User Profiles**: Allow users to create profiles, save favorite plants, and track purchase history.
+- **Plant Care Reminders**: Implement a notification system to remind users about watering schedules and other care activities.
 
-All API calls require an API key, which should be stored in the .env file as REACT_APP_API_KEY2.
+---
 
 ## Contributing
 
-We welcome contributions to Leaf & Bloom! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We welcome contributions! Please read our [contribution guidelines](CONTRIBUTING.md) for details on the code of conduct and the process for submitting pull requests.
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
+
+---
 
 ## Contact
 
 For any inquiries, please reach out to us at
-- AlMonther: ealmonzer667@gmai.com
+- AlMonther: ealmonzer667@gmail.com
 - Gehad: gehadgamalazzam@gmail.com
 
 ---

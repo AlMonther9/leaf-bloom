@@ -9,6 +9,7 @@ import Button from "./UI/Button";
 import ErrorHandler from "./ErrorHandling";
 import ResendVerificationEmail from "./VerificationEmail";
 import Input from "./UI/Input";
+import { Boxes } from "./UI/backgroundBox";
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -56,54 +57,71 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-sign bg-cover">
-      <div className="bg-opacity-50 backdrop-blur-2xl p-6 m-auto rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-green-800">
-          Sign In
-        </h1>
-        <form onSubmit={handleSubmit}>
-          <Input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <ErrorHandler error={error} />
-          {verificationSent && (
-            <Button
-              text="Resend Verification Email"
-              onClick={<ResendVerificationEmail />}
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 mb-4"
-            ></Button>
-          )}
-          <p className="mt-2 text-center">
+    <main className="relative flex items-center justify-center h-screen overflow-hidden bg">
+      <div className="absolute inset-0 w-full h-full bg-quinary z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+      <div className="flex flex-col items-center justify-center gap-20 md:flex-row">
+        <div className="w-full max-w-md p-6 rounded-lg shadow-md backdrop-blur-2xl bg-quaternary">
+          <h1 className="mb-6 text-2xl font-bold text-center text-white">
+            Sign In
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <ErrorHandler error={error} />
+            {verificationSent && (
+              <Button
+                text="Resend Verification Email"
+                onClick={<ResendVerificationEmail />}
+                className="w-full py-2 mb-4 text-white bg-blue-600 rounded hover:bg-blue-700"
+              ></Button>
+            )}
+            <p className="mt-2 text-center">
+              <button
+                onClick={() => navigate("/forgot-password")}
+                className="py-0 mb-1 text-white hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </p>
             <button
-              onClick={() => navigate("/forgot-password")}
-              className="text-blue-600 hover:underline mb-1 py-0"
+              text="Sign In"
+              type="submit"
+              className="w-full py-2 transition-colors duration-75 rounded-lg bg-beige2 hover:bg-[#d6c48d] text-tertiary font-semibold"
             >
-              Forgot Password?
+              Sign In
             </button>
-          </p>
-          <Button text="Sign In" type="submit"></Button>
-          <p className="flex text-white gap-2 mt-2 justify-center">
-            {" "}
-            Don't have an account?
-            <button
-              type="button"
-              onClick={() => navigate("/signUp")}
-              className=" text-white rounded hover:text-green-700"
-            >
-              Sign Up
-            </button>
-          </p>
-        </form>
+            <p className="flex justify-center gap-2 mt-2 text-white">
+              {" "}
+              Don't have an account?
+              <button
+                type="button"
+                onClick={() => navigate("/signUp")}
+                className="text-white underline rounded hover:text-beige2"
+              >
+                Sign Up
+              </button>
+            </p>
+          </form>
+        </div>
+        <div className="hidden w-1/3 md:flex ">
+          <img
+            src={require("../assets/flowerSteps.png")}
+            alt=""
+            className="w-full"
+          />
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

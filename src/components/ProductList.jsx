@@ -3,32 +3,8 @@ import { addItem } from "../redux/CartSlice";
 import { useDispatch } from "react-redux";
 import plantsArray from "../api/products";
 import { VintagePlantBackground } from "./UI/ThemedPlantBg";
-
-
-const PlantCard = React.memo(({ plant, onAddToCart, isAdded }) => (
-  <div className="w-full max-w-sm h-[350px] mb-5 p-3 bg-gradient-to-br from-neutral-500 border border-gray-300 rounded-md text-center relative hover:scale-105 transition-transform duration-300 ease-in-out z-10 flex flex-col justify-between">
-    <div>
-      <img
-        className="w-full h-48 object-cover mb-2.5 rounded-lg"
-        src={plant.image}
-        alt={plant.name}
-      />
-      <div className="font-bold mb-2.5">{plant.name}</div>
-      <div className="mb-2.5">{plant.description}</div>
-    </div>
-    <div>
-      <div className="text-red-600 text-lg mt-auto">{plant.cost}</div>
-      <button
-        className={`bg-green-600 text-white border-none rounded-lg py-2.5 px-5 cursor-pointer transition-colors duration-300 ease-in-out ${
-          isAdded ? "bg-gray-500" : "hover:bg-green-700"
-        }`}
-        onClick={() => onAddToCart(plant)}
-      >
-        {isAdded ? "Added to Cart" : "Add to Cart"}
-      </button>
-    </div>
-  </div>
-));
+import PotsCards from "./potscards";
+import ItemCard from "./ItemCard";
 
 function ProductList() {
   const dispatch = useDispatch();
@@ -40,13 +16,13 @@ function ProductList() {
     setShowCart(false);
   }, []);
 
-  const handleContinueShopping = useCallback(() => {
-    setShowCart(false);
-  }, []);
-
   const handleAddToCart = useCallback(
     (plant) => {
-      dispatch(addItem(plant));
+      const itemToAdd = {
+        ...plant,
+        cost: plant.price,
+      };
+      dispatch(addItem(itemToAdd));
       setAddedToCart((prevState) => ({
         ...prevState,
         [plant.name]: true,
@@ -67,15 +43,15 @@ function ProductList() {
   const renderPlantCategories = useCallback(
     () =>
       plantCategories.map((category, index) => (
-        <div key={index} className="w-full max-w-6xl">
-          <h1 className="text-left font-bold text-2xl my-5">
+        <div key={index} className="w-full">
+          <h1 className="my-5 text-2xl font-bold text-left text-quaternary">
             <div>{category.category}</div>
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 p-5 place-items-center">
+          <div className="grid grid-cols-1 gap-12 p-5 md:grid-cols-2 lg:grid-cols-3 place-items-center">
             {category.plants.map((plant, plantIndex) => (
-              <PlantCard
+              <ItemCard
                 key={plantIndex}
-                plant={plant}
+                item={plant}
                 onAddToCart={handleAddToCart}
                 isAdded={plant.isAdded}
               />
@@ -87,33 +63,33 @@ function ProductList() {
   );
 
   return (
-    < VintagePlantBackground>
-    <div className="flex flex-col w-full min-h-screen">
-      <div className="flex items-center md:items-start mt-24 px-4 md:px-12 lg:px-24">
-        <button
-          onClick={handlePlantsClick}
-          className="text-green-600 text-3xl no-underline"
-        >
-          Plants
-        </button>
-      </div>
-
-      {showCart ? (
-        {
-          /* <CartItem onContinueShopping={handleContinueShopping} /> */
-        }
-      ) : (
-        <div className="flex flex-col items-center justify-center">
-          {plantCategories.length > 0 ? (
-            renderPlantCategories()
-          ) : (
-            <div className="text-center text-2xl text-gray-600">
-              No plants available. Please check back later.
-            </div>
-          )}
+    <VintagePlantBackground>
+      <div className="flex flex-col min-h-screen px-4 mb-4 md:px-12 lg:px-24 ">
+        <div className="flex items-center mt-16 md:items-start">
+          <button
+            onClick={handlePlantsClick}
+            className="text-3xl font-bold no-underline text-quinary"
+          >
+            Plants By Category
+          </button>
         </div>
-      )}
-    </div>
+
+        {showCart ? (
+          {}
+        ) : (
+          <div className="flex flex-col items-center justify-center">
+            {plantCategories.length > 0 ? (
+              renderPlantCategories()
+            ) : (
+              <div className="text-2xl text-center text-gray-600">
+                No plants available. Please check back later.
+              </div>
+            )}
+          </div>
+        )}
+        <h3 className="my-8 text-3xl font-bold text-quinary">Pots</h3>
+        <PotsCards />
+      </div>
     </VintagePlantBackground>
   );
 }

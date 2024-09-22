@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getPestDiseaseList, getCareGuides, getFAQs } from '../api/api';
 import { AlertCircle, Leaf } from 'lucide-react';
 import Loading from './UI/Loader';
+import { VintagePlantBackground } from './UI/ThemedPlantBg';
 // Helper to safely render content
 const renderContent = (content) => {
   if (typeof content === 'string') {
@@ -18,7 +19,7 @@ const renderContent = (content) => {
 const renderDescription = (description) => {
   if (Array.isArray(description)) {
     return description.map((item, index) => (
-      <p key={index} className="text-gray-700 mb-2">
+      <p key={index} className="mb-2 text-gray-700">
         {item.subtitle && <strong>{item.subtitle}: </strong>}
         {renderContent(item.description)}
       </p>
@@ -85,7 +86,8 @@ function Blog() {
   }
 
   return (
-    <div className="bg-[#F3E9D2] min-h-screen p-8">
+    <VintagePlantBackground>
+    <div className="min-h-screen p-8 ">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-bold mb-12 text-center text-[#114232] font-serif">
           The Cozy Plant Corner
@@ -121,7 +123,7 @@ function Blog() {
                   <img
                     src={pest.images[0].original_url}
                     alt={renderContent(pest.common_name)}
-                    className="w-full h-64 object-cover rounded-lg shadow-md mb-4"
+                    className="object-cover w-full h-64 mb-4 rounded-lg shadow-md"
                   />
                 )}
               </section>
@@ -155,6 +157,7 @@ function Blog() {
         ))}
       </div>
     </div>
+    </VintagePlantBackground>
   );
 }
 
