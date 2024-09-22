@@ -7,6 +7,7 @@ Welcome to **Leaf & Bloom**, a plant-themed platform designed to help plant enth
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Web Structure](#web-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Areas of Improvement](#areas-of-improvement)
@@ -42,12 +43,15 @@ Welcome to **Leaf & Bloom**, a plant-themed platform designed to help plant enth
 - **React Lucide**: Icon library for easy and customizable icons.
 - **EmailJS**: For handling email notifications and direct communication with users.
 - **Vercel**: Deployment and hosting.
+- **aceternity**: UI library makes your UI better.
 
 ### Backend
 - **Firebase Firestore**: Realtime database to store posts, comments, and likes.
 - **Firebase Authentication**: Secure user authentication for the platform.
 
 ---
+## Web Structure
+![image](https://github.com/user-attachments/assets/61ca8b3e-3a29-49f0-bb1b-c1cabd8e1e34)
 
 ### **Credits for 3D Models**
 
@@ -97,12 +101,6 @@ To run this project locally, follow these steps:
 
 ---
 
-## Contributing
-
-We welcome contributions! Please read our [contribution guidelines](CONTRIBUTING.md) for details on the code of conduct and the process for submitting pull requests.
-
----
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
@@ -112,8 +110,15 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 ## Contact
 
 For any inquiries, please reach out to us at
-- AlMonther: ealmonzer667@gmail.com
-- Gehad: gehadgamalazzam@gmail.com
+### AlMonther
+- ealmonzer667@gmail.com
+- [Twitter Account](https://x.com/AlMonther_N)
+- [Frontend Mentor](https://www.frontendmentor.io/profile/AlMonther9)
+  
+### Gehad
+- gehadgamalazzam@gmail.com
+- [Twitter Account](https://x.com/Gehad1984)
+- [Frontend Mentor](https://www.frontendmentor.io/profile/Gehadazzam)
 
 ---
 
