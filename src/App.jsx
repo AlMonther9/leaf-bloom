@@ -33,9 +33,9 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="plant-encyclopedia" element={<PlantEncyclopedia />} />
             <Route path="blog" element={<Blog />} />
-            <Route element={<PrivateRoute />}>
               <Route path="contact" element={<Contact />} />
               <Route path="products" element={<ProductList />} />
+            <Route element={<PrivateRoute />}>
               <Route path="community" element={<Community />} />
               <Route path="cart" element={<Cart />} />
               <Route path="profile" element={<Profile />} />
