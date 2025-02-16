@@ -17,7 +17,9 @@ const Contact = () => {
     if (!formData.get("message")) errors.message = "Message cannot be empty";
     return errors;
   };
+
   const form = useRef();
+
   const handleFormSubmission = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -36,7 +38,6 @@ const Contact = () => {
         process.env.REACT_APP_SERVICE_ID,
         process.env.REACT_APP_TEMPLATE_ID,
         e.target,
-        form.current,
         process.env.REACT_APP_PUBLIC_KEY
       );
 
@@ -54,11 +55,11 @@ const Contact = () => {
   };
 
   return (
-    <main className="pt-[3rem] pb-[2.5rem] bg-sunflower bg-cover h-screen">
+    <main className="min-h-screen px-4 pt-12 pb-8 bg-center bg-cover bg-sunflower">
       <form
         ref={form}
         onSubmit={handleFormSubmission}
-        className="mt-[3rem] max-w-md mx-auto p-6 bg-gradient-to-br from-green-50 to-yellow-50 rounded-lg shadow-lg border border-green-200 transform hover:scale-105 transition-transform duration-300"
+        className="w-full max-w-md p-6 mx-auto mt-12 transition-transform duration-300 transform border border-green-200 rounded-lg shadow-lg bg-gradient-to-br from-green-50 to-yellow-50 hover:scale-105"
       >
         <h2 className="mb-6 text-3xl font-extrabold text-center text-green-800">
           Grow With Us
