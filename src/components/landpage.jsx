@@ -184,7 +184,7 @@ const LandingPage = () => {
               perfect plant for your space.
               <motion.button
                 className="flex items-center justify-center px-4 py-2 mt-4 text-white rounded-lg bg-quaternary hover:bg-quinary hover:shadow-lg hover:scale-105"
-                onClick={() => navigate("/plantencyclopedia")}
+                onClick={() => navigate("/plant-encyclopedia")}
                 initial={{ opacity: 0, translateX: "80%" }}
                 whileInView={{ opacity: 1, translateX: "0" }}
               >
